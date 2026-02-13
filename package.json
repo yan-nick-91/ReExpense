@@ -1,0 +1,20 @@
+{
+  "name": "reexpense",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:front": "cd client && npm run dev",
+    "dev:back": "cd server && npm run dev",
+    "dev:debug:back": "cd server && npm run dev:debug",
+    "dev:all": "concurrently \"npm run dev:back\" \"npm run dev:front\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
