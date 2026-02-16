@@ -8,3 +8,9 @@ export interface Transaction {
   type: TransactionType;
   date: string;
 }
+
+export interface CreateTransactionPayload {
+  amount: number;
+  category: string;
+  type: TransactionType
+}
