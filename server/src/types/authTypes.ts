@@ -1,13 +1,13 @@
 import { type Request } from "express"
 
 export interface User {
-    id: number
+    id: string
     email: string
     password: string
 }
 
 export interface SafeUser {
-    id: number
+    id: string
     email: string   
 }
 
