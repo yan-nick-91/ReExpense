@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../../store/store';
 import { registerController } from '../../../controllers/authController';
 
-import AuthContainer from '../../UI/AuthContainer';
+import AuthContainer from '../../UI/FormContainer';
 import Button from '../../UI/Button';
 import {
   validationResult,

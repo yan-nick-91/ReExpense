@@ -7,9 +7,9 @@ import { API_URL } from './config';
 export const register = createAsyncThunk<
   { token: string },
   { email: string; password: string }
->('auth/register', async ({ email, password }) => {
+>('/auth/register', async ({ email, password }) => {
   const res = await axios.post<{ user: SafeUser; token: string }>(
-    `${API_URL}/register`,
+    `${API_URL}/auth/register`,
     { email, password },
     { withCredentials: true },
   );
@@ -26,9 +26,9 @@ export const register = createAsyncThunk<
 export const login = createAsyncThunk<
   { token: string },
   { email: string; password: string }
->('auth/login', async ({ email, password }) => {
+>('/auth/login', async ({ email, password }) => {
   const res = await axios.post<{ user: SafeUser; token: string }>(
-    `${API_URL}/login`,
+    `${API_URL}/auth/login`,
     { email, password },
     { withCredentials: true },
   );
@@ -54,7 +54,7 @@ export const isAuthenticated = createAsyncThunk<
   try {
 
     const res = await axios.post<{ user: SafeUser }>(
-      `${API_URL}/authenticated`,
+      `${API_URL}/auth/authenticated`,
       {},
       {
         headers: {
@@ -69,15 +69,15 @@ export const isAuthenticated = createAsyncThunk<
   }
 });
 
-export const logout = createAsyncThunk<void, { token: string }>(
-  'auth/logout',
-  async () => {
+export const logout = createAsyncThunk<void, void, { rejectValue: string }>(
+  '/auth/logout',
+  async (_, {rejectWithValue}) => {
     const token = sessionStorage.getItem('token');
 
     if (!token) {
-      throw new Error('Something went wrong during logout request');
+      throw rejectWithValue('Something went wrong during logout request');
     }
-    await axios.delete(`${API_URL}/logout`, {
+    await axios.delete(`${API_URL}/auth/logout`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
