@@ -6,6 +6,7 @@ import RegisterPage from '../view/pages/RegisterPage';
 import DashboardPage from '../view/pages/DashboardPage';
 import ProtectedRoute from './ProtectedRoute';
 import IndexRoute from './IndexRoute';
+import SettingsPage from '../view/pages/SettingsPage';
 
 const router = createBrowserRouter([
   {
@@ -18,7 +19,8 @@ const router = createBrowserRouter([
       {
         element: <ProtectedRoute />,
         children: [
-          { path: '/main', element: <DashboardPage /> }, // should only be accessible when user is logged in
+          { path: '/', element: <DashboardPage /> }, 
+          { path: '/settings', element: <SettingsPage />}
         ],
       },
     ],
