@@ -7,18 +7,18 @@ import { revokeToken } from '../../infrastructure/token.store.js';
 import { authMiddleware } from '../middleware/auth.middleware.js';
 import { readJSON, writeJSON } from '../../infrastructure/storage.js';
 import { JWT_SECRET } from '../config/config.js';
+import { v4 as uuid } from 'uuid'
 
 const router = Router();
-
 const USERS_FILE = 'users.json';
 
 const loadUsers = (): User[] => readJSON<User[]>(USERS_FILE);
 const saveUsers = (users: User[]) => writeJSON(USERS_FILE, users);
 
 let users = loadUsers();
-let nextId = users.length ? Math.max(...users.map((u) => u.id)) + 1 : 1;
+let generateId = uuid()
 
-router.post('/auth/register', async (req, res) => {
+router.post('/register', async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password)
@@ -28,7 +28,7 @@ router.post('/auth/register', async (req, res) => {
   if (existing) return res.status(409).json({ error: ' User already exists' });
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const newUser: User = { id: nextId++, email, password: hashedPassword };
+  const newUser: User = { id: generateId, email, password: hashedPassword };
   users.push(newUser);
   saveUsers(users);
 
@@ -39,7 +39,7 @@ router.post('/auth/register', async (req, res) => {
   res.status(201).json({ token });
 });
 
-router.post('/auth/login', async (req, res) => {
+router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   users = loadUsers();
@@ -56,11 +56,11 @@ router.post('/auth/login', async (req, res) => {
   res.status(200).json({ token });
 });
 
-router.post('/auth/authenticated', authMiddleware, (req: AuthRequest, res) => {
+router.post('/authenticated', authMiddleware, (req: AuthRequest, res) => {
   res.status(200).json({ user: req.user });
 });
 
-router.delete('/auth/logout', authMiddleware, (req, res) => {
+router.delete('/logout', authMiddleware, (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) return res.status(401).json({ error: 'No token provided' });
 
