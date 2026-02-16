@@ -69,13 +69,13 @@ export const isAuthenticated = createAsyncThunk<
   }
 });
 
-export const logout = createAsyncThunk<void, { token: string }>(
+export const logout = createAsyncThunk<void, void, { rejectValue: string }>(
   '/auth/logout',
-  async () => {
+  async (_, {rejectWithValue}) => {
     const token = sessionStorage.getItem('token');
 
     if (!token) {
-      throw new Error('Something went wrong during logout request');
+      throw rejectWithValue('Something went wrong during logout request');
     }
     await axios.delete(`${API_URL}/auth/logout`, {
       headers: {
