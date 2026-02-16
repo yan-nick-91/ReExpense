@@ -1,24 +1,26 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import authRoutes from './presentation/routes/auth.routes.js';
-import cors from 'cors'
+import transactionRoutes from './presentation/routes/transaction.route.js';
+import cors from 'cors';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 443;
-const CLIENT_PORT = process.env.CLIENT_PORT
+const CLIENT_PORT = process.env.CLIENT_PORT;
 
 app.use(
   cors({
     origin: `https://localhost:${CLIENT_PORT}`,
-    credentials: true
-  })
-)
+    credentials: true,
+  }),
+);
 
 app.use(express.json());
 
-app.use('/api', authRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/transaction', transactionRoutes);
 
 app.get('/', (_req, res) => {
   res.json({ message: 'App is running 🚀' });
