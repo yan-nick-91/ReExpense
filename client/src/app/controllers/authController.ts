@@ -1,5 +1,5 @@
 import type { AppDispatch } from '../store/store';
-import { login, register } from '../api/authHttpHandler';
+import { login, logout, register } from '../api/authHttpHandler';
 
 export const registerController = async (
   dispatch: AppDispatch,
@@ -14,3 +14,9 @@ export const loginController = async (
 ) => {
   dispatch(login(data)).unwrap();
 };
+
+export const logoutController = async (
+  dispatch: AppDispatch
+) => {
+  dispatch(logout()).unwrap()
+}
