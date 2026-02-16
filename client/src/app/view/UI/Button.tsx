@@ -7,7 +7,7 @@ type Props = {
   children: ReactNode;
   theme?: 'default' | 'info' | 'success' | 'danger' | 'warning' | 'primary';
   navigateTo?: string;
-  type?: 'button' | 'submit' | 'reset'
+  type?: 'button' | 'submit' | 'reset';
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
 };
 
@@ -36,14 +36,21 @@ export default function Button({
 
   if (navigateTo) {
     return (
-      <NavLink className={classes} to={`/${navigateTo!}`}>
+      <NavLink
+        className={theme === 'default' ? className : classes}
+        to={`/${navigateTo!}`}
+      >
         {children}
       </NavLink>
     );
   }
 
   return (
-    <button className={classes} type={type ?? 'button'} onClick={(e) => onClick?.(e)}>
+    <button
+      className={theme === 'default' ? className : classes}
+      type={type ?? 'button'}
+      onClick={(e) => onClick?.(e)}
+    >
       {children}
     </button>
   );
