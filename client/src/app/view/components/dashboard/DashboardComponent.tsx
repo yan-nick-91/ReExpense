@@ -1,48 +1,55 @@
-import { CartesianGrid, Legend, Line, LineChart, XAxis, YAxis } from 'recharts';
+import { useState } from 'react';
 import TransactionComponent from '../transactions/TransactionComponent';
+import ChartDisplay from './ChartDisplay';
+import ExpenseFormModal from './ExpenseFormModal';
+import IncomeTransaction from '../transactions/IncomeTransaction';
+
+type ExpenseModalType = 'income' | 'outcome';
 
 export default function DashboardComponent() {
+  const [activeExpenseModal, setActiveExpenseModal] = useState<
+    ExpenseModalType | undefined
+  >(undefined);
+
+  const openExpenseModal = (type: ExpenseModalType) => {
+    console.log('Opening type:', type);
+    setActiveExpenseModal(type);
+  };
+  const closeExpenseModal = () => setActiveExpenseModal(undefined);
+
   return (
-    <div className='grid grid-cols-2 w-[80%] border'>
-      <div className='p-4'>
+    <div className='grid grid-cols-2 w-[90%] m-auto'>
+      <section className='p-4'>
         <div className='border border-gray-600 w-full rounded-[0.2rem]'>
-          <div className='bg-[#090979] text-white p-2 pl-2 text-[1.2rem] h-10' />
-          <LineChart
-            style={{ width: '100%', aspectRatio: 1.618, maxWidth: 600 }}
-            responsive
-            margin={{
-              top: 20,
-              right: 20,
-              bottom: 5,
-              left: 0,
-            }}
-          >
-            <CartesianGrid stroke='#aaa' strokeDasharray='5 5' />
-            <Line
-              type='monotone'
-              dataKey='uv'
-              stroke='purple'
-              strokeWidth={2}
-              name='My data series name'
-            />
-            <XAxis dataKey='name' />
-            <YAxis
-              width='auto'
-              label={{ value: 'UV', position: 'insideLeft', angle: -90 }}
-            />
-            <Legend align='right' />
-            
-          </LineChart>
+          <div className='bg-[#090979] text-white p-1 pl-2 text-[1.2rem] h-10' />
+          <ChartDisplay />
           <div className=''></div>
         </div>
-      </div>
+      </section>
       <div className='p-4'>
-        <div className='border border-gray-600 w-full rounded-[0.2rem]'>
-          <div className='bg-[#090979] text-white p-2 pl-2 text-[1.2rem] h-10' />
-          <TransactionComponent />
-          <div className=''></div>
-        </div>
+        <section className='border border-gray-600 w-full rounded-[0.2rem]'>
+          <div className='bg-[#090979] text-white p-1 pl-2 text-[1.2rem] h-10' />
+          <TransactionComponent
+            onOpenIncomeModal={() => openExpenseModal('income')}
+            onOpenOutcomeModal={() => openExpenseModal('outcome')}
+          />
+        </section>
       </div>
+      {/* income */}
+      {activeExpenseModal === 'income' && (
+        <ExpenseFormModal formHeaderText='Income' onClose={closeExpenseModal}>
+          <IncomeTransaction />
+        </ExpenseFormModal>
+      )}
+
+      {/* income */}
+      {activeExpenseModal === 'outcome' && (
+        <ExpenseFormModal formHeaderText='Outcome' onClose={closeExpenseModal}>
+          test
+        </ExpenseFormModal>
+      )}
     </div>
+
+    // modal opens here
   );
 }
