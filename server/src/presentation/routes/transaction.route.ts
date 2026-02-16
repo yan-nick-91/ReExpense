@@ -40,7 +40,7 @@ router.post('/create', authMiddleware, (req: AuthRequest, res) => {
   const transaction: Transaction = {
     id: generateId,
     userId,
-    amount,
+    currency: amount,
     category,
     type,
     date: new Date().toISOString(),
