@@ -11,7 +11,6 @@ export const readJSON = <T>(filename: string): T => {
   
   if (!raw) return [] as unknown as T
 
-
   try {
     const data = JSON.parse(raw)
     return Array.isArray(data) ? (data as T) : ([] as unknown as T)
