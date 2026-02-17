@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { type SafeUser } from '../types/authTypes';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 import { API_URL } from './config';
 
@@ -19,7 +19,6 @@ export const register = createAsyncThunk<
   }
 
   sessionStorage.setItem('token', res.data.token);
-
   return { token: res.data.token };
 });
 
@@ -38,7 +37,6 @@ export const login = createAsyncThunk<
   }
 
   sessionStorage.setItem('token', res.data.token);
-
   return { token: res.data.token };
 });
 
@@ -52,7 +50,6 @@ export const isAuthenticated = createAsyncThunk<
   if (!token) throw rejectWithValue('NO_TOKEN');
 
   try {
-
     const res = await axios.post<{ user: SafeUser }>(
       `${API_URL}/auth/authenticated`,
       {},
@@ -63,15 +60,56 @@ export const isAuthenticated = createAsyncThunk<
       },
     );
     return res.data.user;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (err: any) {
-    return rejectWithValue(err.response.data.error || 'Failed auth')
+  } catch (err) {
+    const axiosError = err as AxiosError<{ error: string }>;
+    return rejectWithValue(axiosError.response?.data.error || 'Failed auth');
   }
 });
 
+export const updatePassword = createAsyncThunk<
+  { token: string },
+  { currentPassword: string; newPassword: string }
+>(
+  'auth/update/password',
+  async ({ currentPassword, newPassword }, { rejectWithValue }) => {
+    try {
+      const token = sessionStorage.getItem('token');
+
+      if (!token) {
+        throw new Error(
+          'Something went wrong sending request to update password',
+        );
+      }
+
+      const response = await axios.put(
+        `${API_URL}/auth/update/password`,
+        { currentPassword, newPassword },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const data = response.data as { token: string };
+      sessionStorage.setItem('token', data.token);
+      return data;
+    } catch (err) {
+      const axiosError = err as AxiosError<{ error: string }>;
+
+      if (axiosError.response?.data.error) {
+        return rejectWithValue(axiosError.response?.data.error);
+      }
+      return rejectWithValue(
+        axiosError.response?.data.error || 'Failed to update password',
+      );
+    }
+  },
+);
+
 export const logout = createAsyncThunk<void, void, { rejectValue: string }>(
   '/auth/logout',
-  async (_, {rejectWithValue}) => {
+  async (_, { rejectWithValue }) => {
     const token = sessionStorage.getItem('token');
 
     if (!token) {
