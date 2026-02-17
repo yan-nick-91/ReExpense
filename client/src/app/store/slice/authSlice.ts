@@ -4,6 +4,7 @@ import {
   login,
   register,
   isAuthenticated,
+  updatePassword,
   logout,
 } from '../../api/authHttpHandler';
 
@@ -11,27 +12,32 @@ const initialState: AuthState = {
   user: undefined,
   isAuthenticated: false,
   error: undefined,
-  loading: true
+  loading: true,
+  success: false
 };
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    resetSuccessPassword(state) {
+      state.success = false
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(isAuthenticated.pending, (state) => {
-        state.loading = true
+        state.loading = true;
       })
       .addCase(isAuthenticated.fulfilled, (state, action) => {
         state.isAuthenticated = true;
         state.user = action.payload;
-        state.loading = false
+        state.loading = false;
       })
       .addCase(isAuthenticated.rejected, (state) => {
         state.isAuthenticated = false;
         state.user = undefined;
-        state.loading = false
+        state.loading = false;
       })
       .addCase(login.fulfilled, (state) => {
         state.isAuthenticated = true;
@@ -45,12 +51,27 @@ const authSlice = createSlice({
       .addCase(register.rejected, (state, action) => {
         state.error = action.error.message;
       })
+      .addCase(updatePassword.pending, (state) => {
+        state.loading = true;
+        state.error = undefined;
+        state.success = false;
+      })
+      .addCase(updatePassword.fulfilled, (state) => {
+        state.loading = false;
+        state.success = true
+      })
+      .addCase(updatePassword.rejected, (state, action) => {
+        state.loading = false;
+        state.success = false;
+        state.error = action.error.message;
+      })
       .addCase(logout.fulfilled, (state) => {
         state.isAuthenticated = false;
         state.user = undefined;
-        state.loading = false
+        state.loading = false;
       });
   },
 });
 
 export default authSlice.reducer;
+export const { resetSuccessPassword } = authSlice.actions
