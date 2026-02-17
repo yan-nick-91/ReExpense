@@ -1,7 +1,7 @@
 import { useEffect, useState, type SubmitEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../../store/store';
-import AuthContainer from '../../UI/AuthContainer';
+import AuthContainer from '../../UI/FormContainer';
 import { validationResult } from '../../../validations/authValidation';
 import { loginController } from '../../../controllers/authController';
 import Button from '../../UI/Button';

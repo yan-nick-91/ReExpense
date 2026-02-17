@@ -5,19 +5,19 @@ type ValidationResult = {
 
 export const validationResult = (
   value: string,
-  message: string,
+  errorMessage: string,
 ): ValidationResult => {
-  if (!value) return { valid: false, error: message };
+  if (!value) return { valid: false, error: errorMessage };
   return { valid: true };
 };
 
-export const verifyConfirmPasswordInputField = (
+export const verifyConfirmedPasswordInputField = (
   password: string,
   confirmPassword: string,
-  message: string,
+  errorMessage: string,
 ) => {
   if (password !== confirmPassword) {
-    return { valid: false, error: message };
+    return { valid: false, error: errorMessage };
   }
   return { valid: true };
 };

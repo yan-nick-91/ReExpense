@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../../store/store';
 import { registerController } from '../../../controllers/authController';
 
-import AuthContainer from '../../UI/AuthContainer';
+import AuthContainer from '../../UI/FormContainer';
 import Button from '../../UI/Button';
 import {
   validationResult,
-  verifyConfirmPasswordInputField,
+  verifyConfirmedPasswordInputField,
 } from '../../../validations/authValidation';
 import { NavLink, useNavigate } from 'react-router-dom';
 
@@ -40,7 +40,7 @@ export default function RegisterComponent() {
 
     const emailResult = validationResult(email, 'Email is required');
     const passwordResult = validationResult(password, 'Password is required');
-    const confirmPasswordResult = verifyConfirmPasswordInputField(
+    const confirmPasswordResult = verifyConfirmedPasswordInputField(
       password,
       confirmPassword,
       'Passwords do not match',
@@ -115,7 +115,7 @@ export default function RegisterComponent() {
             autoComplete='no'
             aria-invalid={!!confirmPasswordError}
             aria-describedby={
-              confirmPasswordError ? 'confirm-error' : undefined
+              confirmPasswordError ? 'confirm-password-error' : undefined
             }
           />
           {confirmPasswordError && (
