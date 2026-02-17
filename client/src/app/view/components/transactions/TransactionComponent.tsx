@@ -10,7 +10,6 @@ interface TransactionProps {
 }
 
 export default function TransactionComponent({ onOpenIncomeModal, onOpenOutcomeModal}: TransactionProps) {
-
   const dispatch = useDispatch<AppDispatch>();
 
   const transactions = useSelector(
@@ -19,7 +18,6 @@ export default function TransactionComponent({ onOpenIncomeModal, onOpenOutcomeM
 
   useEffect(() => {
     dispatch(getAllTransaction());
-    // console.log(data)
   }, [dispatch]);
 
   const currentAmount = transactions.reduce((acc, tx) => {
@@ -30,12 +28,13 @@ export default function TransactionComponent({ onOpenIncomeModal, onOpenOutcomeM
 
 
   return (
-    <>
+    <div className='p-4'>
       <p className='mb-4'>Current currency: {currentAmount.toFixed(2)}</p>
+      <div className='border border-gray-400 mb-4'/>
       <div className='flex gap-4'>
         <Button theme={'primary'} onClick={onOpenIncomeModal}>Income</Button>
         <Button theme={'primary'} onClick={onOpenOutcomeModal}>Outcome</Button>
       </div>
-    </>
+    </div>
   );
 }
