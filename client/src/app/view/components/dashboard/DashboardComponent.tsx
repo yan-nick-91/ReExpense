@@ -49,10 +49,12 @@ export default function DashboardComponent() {
           <ExpenseInputComponent
             labelId='amount of income currency'
             labelText='Amount of income currency'
+            type='number'
           />
           <ExpenseInputComponent
             labelId='category'
             labelText='Category'
+            type='text'
           />
         </ExpenseFormModal>
       )}
