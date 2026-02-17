@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import TransactionComponent from '../transactions/TransactionComponent';
 import ChartDisplay from './ChartDisplay';
-import ExpenseFormModal from './ExpenseFormModal';
-import IncomeTransaction from '../transactions/IncomeTransaction';
+import ExpenseFormModal from './expense/ExpenseFormModal';
+import ExpenseInputComponent from './expense/ExpenseInputComponent';
+import TransactionActivities from '../transactions/TransactionActivities';
 
 type ExpenseModalType = 'income' | 'outcome';
 
@@ -27,18 +28,32 @@ export default function DashboardComponent() {
         </div>
       </section>
       <div className='p-4'>
-        <section className='border border-gray-600 w-full rounded-[0.2rem]'>
+        <section className='border border-gray-600 w-full rounded-[0.2rem] mb-8'>
           <div className='bg-[#090979] text-white p-1 pl-2 text-[1.2rem] h-10' />
           <TransactionComponent
             onOpenIncomeModal={() => openExpenseModal('income')}
             onOpenOutcomeModal={() => openExpenseModal('outcome')}
           />
         </section>
+        <section className='border border-gray-600 w-full rounded-[0.2rem]'>
+          <div className='bg-[#090979] text-white p-1 pl-2 text-[1.2rem] h-10'>
+            <h2>Activities</h2>
+          </div>
+          <TransactionActivities />
+        </section>
       </div>
       {/* income */}
       {activeExpenseModal === 'income' && (
         <ExpenseFormModal formHeaderText='Income' onClose={closeExpenseModal}>
-          <IncomeTransaction />
+          {/* <IncomeTransaction /> */}
+          <ExpenseInputComponent
+            labelId='amount of income currency'
+            labelText='Amount of income currency'
+          />
+          <ExpenseInputComponent
+            labelId='category'
+            labelText='Category'
+          />
         </ExpenseFormModal>
       )}
 
