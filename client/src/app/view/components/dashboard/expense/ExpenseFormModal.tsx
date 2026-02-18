@@ -6,7 +6,11 @@ interface Props {
   onClose: () => void;
 }
 
-export default function ExpenseFormModal({ children, formHeaderText, onClose }: Props) {
+export default function ExpenseFormModal({
+  children,
+  formHeaderText,
+  onClose,
+}: Props) {
   return (
     <div className='fixed inset-0 flex items-center justify-center bg-[#1b1b1bbd] bg-opacity-50'>
       <form className='bg-white p-4 rounded-[0.2rem] shadow-lg w-200'>

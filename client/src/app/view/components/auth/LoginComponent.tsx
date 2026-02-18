@@ -66,7 +66,7 @@ export default function LoginComponent() {
     if (!isValid) return;
 
     try {
-      await loginController(dispatch, {
+      loginController(dispatch, {
         email: form.email,
         password: form.password,
       });

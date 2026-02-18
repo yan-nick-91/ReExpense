@@ -1,9 +1,9 @@
-let revokedTokens = new Set<string>()
+let revokedTokens = new Set<string>();
 
 export const revokeToken = (token: string) => {
-    revokedTokens.add(token)
-}
+  revokedTokens.add(token);
+};
 
 export const isTokenRevoked = (token: string): boolean => {
-    return revokedTokens.has(token)
-}
+  return revokedTokens.has(token);
+};

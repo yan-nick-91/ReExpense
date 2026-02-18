@@ -14,7 +14,7 @@ export default function Navbar() {
   );
 
   const logout = async () => {
-    await logoutController(dispatch);
+    logoutController(dispatch);
     navigate('/');
   };
 

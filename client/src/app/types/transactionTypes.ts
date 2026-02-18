@@ -12,5 +12,5 @@ export interface Transaction {
 export interface CreateTransactionPayload {
   currency: number;
   category: string;
-  type: TransactionType
+  type: TransactionType;
 }

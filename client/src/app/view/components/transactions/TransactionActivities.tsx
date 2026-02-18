@@ -2,8 +2,6 @@ import { useSelector } from 'react-redux';
 import type { RootState } from '../../../store/store';
 
 export default function TransactionActivities() {
-  //   const dispatch = useDispatch();
-
   const transactions = useSelector(
     (state: RootState) => state.transaction.items,
   );
