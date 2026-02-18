@@ -1,4 +1,4 @@
-import { useEffect, useState, type SubmitEvent } from 'react';
+import { useEffect, useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../../store/store';
 import { registerController } from '../../../controllers/authController';
@@ -11,6 +11,18 @@ import {
 } from '../../../validations/authValidation';
 import { NavLink, useNavigate } from 'react-router-dom';
 
+type FormState = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
+type ErrorState = {
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+};
+
 export default function RegisterComponent() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -19,36 +31,51 @@ export default function RegisterComponent() {
     (state: RootState) => state.auth.isAuthenticated,
   );
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [form, setForm] = useState<FormState>({
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
 
-  const [emailError, setEmailError] = useState<string | undefined>();
-  const [passwordError, setPasswordError] = useState<string | undefined>();
-  const [confirmPasswordError, setConfirmPasswordError] = useState<
-    string | null
-  >(null);
+  const [errors, setErrors] = useState<ErrorState>({});
 
   useEffect(() => {
     if (isAuthenticated) navigate('/');
   }, [isAuthenticated, navigate]);
+
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     console.log('clicked');
 
-    const emailResult = validationResult(email, 'Email is required');
-    const passwordResult = validationResult(password, 'Password is required');
+    const emailResult = validationResult(form.email, 'Email is required');
+    const passwordResult = validationResult(form.password, 'Password is required');
     const confirmPasswordResult = verifyConfirmedPasswordInputField(
-      password,
-      confirmPassword,
+      form.password,
+      form.confirmPassword,
       'Passwords do not match',
     );
 
-    setEmailError(emailResult.error);
-    setPasswordError(passwordResult.error);
-    setConfirmPasswordError(confirmPasswordResult.error!);
+    // setEmailError(emailResult.error);
+    // setPasswordError(passwordResult.error);
+    // setConfirmPasswordError(confirmPasswordResult.error!);
+
+    const newErrors: ErrorState = {
+      email: emailResult.error,
+      password: passwordResult.error,
+      confirmPassword: confirmPasswordResult.error || undefined,
+    };
+
+    setErrors(newErrors);
 
     const isValid =
       emailResult.valid && passwordResult.valid && !confirmPasswordResult.error;
@@ -56,7 +83,10 @@ export default function RegisterComponent() {
     if (!isValid) return;
 
     try {
-      await registerController(dispatch, { email, password });
+      await registerController(dispatch, {
+        email: form.email,
+        password: form.password,
+      });
     } catch (err) {
       console.error(err);
     }
@@ -72,17 +102,17 @@ export default function RegisterComponent() {
           <label htmlFor='email'>Email</label>
           <input
             id='email'
+            name='email'
             type='email'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={form.email}
+            onChange={onChange}
             className='border rounded-[.2rem] mt-1 border-gray-600 p-2'
             autoComplete='email'
-            aria-invalid={!!emailError}
-            aria-describedby={emailError ? 'email-error' : undefined}
+            aria-invalid={!!errors.email}
           />
-          {emailError && (
+          {errors.email && (
             <p className='text-red-600 text-sm' role='alert'>
-              {emailError}
+              {errors.email}
             </p>
           )}
           <label htmlFor='password' className='mt-2'>
@@ -90,37 +120,35 @@ export default function RegisterComponent() {
           </label>
           <input
             id='password'
+            name='password'
             type='password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={form.password}
+            onChange={onChange}
             className='border rounded-[.2rem] mt-1 border-gray-600 p-2'
             autoComplete='no'
-            aria-invalid={!!passwordError}
-            aria-describedby={passwordError ? 'password-error' : undefined}
+            aria-invalid={!!errors.password}
           />
-          {passwordError && (
+          {errors.password && (
             <p className='text-red-600 text-sm' role='alert'>
-              {passwordError}
+              {errors.password}
             </p>
           )}
-          <label htmlFor='confirm password' className='mt-2'>
+          <label htmlFor='confirmPassword' className='mt-2'>
             Confirm Password
           </label>
           <input
-            id='confirm password'
+            id='confirmPassword'
+            name='confirmPassword'
             type='password'
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            value={form.confirmPassword}
+            onChange={onChange}
             className='border rounded-[.2rem] mt-1 border-gray-600 p-2'
             autoComplete='no'
-            aria-invalid={!!confirmPasswordError}
-            aria-describedby={
-              confirmPasswordError ? 'confirm-password-error' : undefined
-            }
+            aria-invalid={!!errors.confirmPassword}
           />
-          {confirmPasswordError && (
+          {errors.confirmPassword && (
             <p className='text-red-600 text-sm' role='alert'>
-              {confirmPasswordError}
+              {errors.confirmPassword}
             </p>
           )}
 
@@ -131,10 +159,7 @@ export default function RegisterComponent() {
         <div className='my-6 pl-2'>
           <p>
             Not an account yet? Navigate to{' '}
-            <NavLink
-              to={`/login`}
-              className={'underline underline-offset-5'}
-            >
+            <NavLink to={`/login`} className={'underline underline-offset-5'}>
               login page
             </NavLink>
           </p>
