@@ -20,7 +20,7 @@ app.use(
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
-app.use('/api/transaction', transactionRoutes);
+app.use('/api/transactions', transactionRoutes);
 
 app.get('/', (_req, res) => {
   res.json({ message: 'App is running 🚀' });
