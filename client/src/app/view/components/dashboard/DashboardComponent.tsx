@@ -2,7 +2,6 @@ import { useState } from 'react';
 import TransactionComponent from '../transactions/TransactionComponent';
 import ChartDisplay from './ChartDisplay';
 import ExpenseFormModal from './expense/ExpenseFormModal';
-import ExpenseInputComponent from './expense/ExpenseInputComponent';
 import TransactionActivities from '../transactions/TransactionActivities';
 
 type ExpenseModalType = 'income' | 'outcome';
@@ -42,24 +41,17 @@ export default function DashboardComponent() {
         </section>
       </div>
       {activeExpenseModal === 'income' && (
-        <ExpenseFormModal formHeaderText='Income' onClose={closeExpenseModal}>
-          <ExpenseInputComponent
-            labelId='amount of income currency'
-            labelText='Amount of income currency'
-            type='number'
-          />
-          <ExpenseInputComponent
-            labelId='category'
-            labelText='Category'
-            type='text'
-          />
-        </ExpenseFormModal>
+        <ExpenseFormModal
+          expenseType={activeExpenseModal}
+          onClose={closeExpenseModal}
+        />
       )}
 
       {activeExpenseModal === 'outcome' && (
-        <ExpenseFormModal formHeaderText='Outcome' onClose={closeExpenseModal}>
-          test
-        </ExpenseFormModal>
+        <ExpenseFormModal
+          expenseType={activeExpenseModal}
+          onClose={closeExpenseModal}
+        />
       )}
     </div>
   );
