@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAllTransaction } from '../../../api/transactionHttpHandler';
 import type { AppDispatch, RootState } from '../../../store/store';
 
-interface TransactionProps {
+type Props = {
   onOpenIncomeModal: () => void;
   onOpenOutcomeModal: () => void;
 }
@@ -12,7 +12,7 @@ interface TransactionProps {
 export default function TransactionComponent({
   onOpenIncomeModal,
   onOpenOutcomeModal,
-}: TransactionProps) {
+}: Props) {
   const dispatch = useDispatch<AppDispatch>();
 
   const transactions = useSelector(
