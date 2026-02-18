@@ -2,11 +2,7 @@ import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-import {
-  type AuthRequest,
-  type SafeUser,
-  type User,
-} from '../../types/authTypes.js';
+import { type AuthRequest, type User } from '../../types/authTypes.js';
 import { revokeToken } from '../../infrastructure/token.store.js';
 import { authMiddleware } from '../middleware/auth.middleware.js';
 import { readJSON, writeJSON } from '../../infrastructure/storage.js';
@@ -19,84 +15,104 @@ const USERS_FILE = 'users.json';
 const loadUsers = (): User[] => readJSON<User[]>(USERS_FILE);
 const saveUsers = (users: User[]) => writeJSON(USERS_FILE, users);
 
-let users = loadUsers();
-let generateId = uuid();
+const signToken = (userId: string) =>
+  jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '1h' });
+
+// let users = loadUsers();
+// let generateId = uuid();
 
 router.post('/register', async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  if (!email || !password)
-    return res.status(400).json({ error: 'Missing email or password' });
+    if (!email || !password)
+      return res.status(400).json({ error: 'Missing email or password' });
 
-  const existing = users.find((u) => u.email === email);
-  if (existing) return res.status(409).json({ error: ' User already exists' });
+    const users = loadUsers();
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const newUser: User = { id: generateId, email, password: hashedPassword };
-  users.push(newUser);
-  saveUsers(users);
+    const exists = users.some((u) => u.email === email);
+    if (exists) return res.status(409).json({ error: ' User already exists' });
 
-  const token = jwt.sign({ id: newUser.id }, JWT_SECRET, {
-    expiresIn: '1h',
-  });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser: User = {
+      id: uuid(),
+      email,
+      password: hashedPassword,
+    };
 
-  res.status(201).json({ token });
+    users.push(newUser);
+    saveUsers(users);
+
+    const token = signToken(newUser.id);
+
+    res.status(201).json({ token });
+  } catch (err) {
+    return res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  users = loadUsers();
-  const user = users.find((u) => u.email === email);
-  if (!user) return res.status(401).json({ error: 'Invalid credentials' });
+    const users = loadUsers();
+    const user = users.find((u) => u.email === email);
 
-  const isValid = await bcrypt.compare(password, user.password);
-  if (!isValid) return res.status(401).json({ error: 'Invalid credentials' });
+    if (!user) return res.status(401).json({ error: 'Invalid credentials' });
 
-  const token = jwt.sign({ id: user.id }, JWT_SECRET, {
-    expiresIn: '1h',
-  });
+    const isValid = await bcrypt.compare(password, user.password);
+    if (!isValid) return res.status(401).json({ error: 'Invalid credentials' });
 
-  res.status(200).json({ token });
+    const token = signToken(user.id);
+
+    return res.status(200).json({ token });
+  } catch (err) {
+    return res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 router.post('/authenticated', authMiddleware, (req: AuthRequest, res) => {
-  res.status(200).json({ user: req.user });
+  return res.status(200).json({ user: req.user });
 });
 
 router.put(
   '/update/password',
   authMiddleware,
   async (req: AuthRequest, res) => {
-    const { currentPassword, newPassword } = req.body;
+    try {
+      const { currentPassword, newPassword } = req.body;
 
-    users = loadUsers();
-    const userId = req.user.id;
-    const user = users.find((u) => u.id === userId);
+      const users = loadUsers();
+      const userId = req.user.id;
+      const userIndex = users.findIndex((u) => u.id === userId);
 
-    if (!user)
-      res
-        .status(500)
-        .json({ error: 'Some went wrong during password editing' });
+      if (userIndex === -1) {
+        res.status(404).json({ error: 'User not found' });
+      }
 
-    const currentPasswordIsValid = await bcrypt.compare(
-      currentPassword,
-      user!.password,
-    );
+      const user = users[userIndex];
 
-    if (!currentPasswordIsValid) {
-      res.status(401).json({ error: 'Current password is incorrect' });
+      const currentPasswordIsValid = await bcrypt.compare(
+        currentPassword,
+        user!.password,
+      );
+
+      if (!currentPasswordIsValid) {
+        res.status(401).json({ error: 'Current password is incorrect' });
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      user!.password = hashedPassword;
+      saveUsers(users);
+
+      const newToken = signToken(user!.id);
+
+      return res
+        .status(201)
+        .json({ message: 'Password updated', token: newToken });
+    } catch (err) {
+      return res.status(500).json({ error: 'Internal server error' });
     }
-
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    user!.password = hashedPassword;
-    saveUsers(users);
-
-    const newToken = jwt.sign({ id: user!.id }, JWT_SECRET, {
-      expiresIn: '1h',
-    });
-
-    res.status(201).json({ message: 'Password updated', token: newToken });
   },
 );
 

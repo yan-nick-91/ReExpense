@@ -1,11 +1,13 @@
 type Props = {
   labelId: string;
   labelText: string;
+  type: string
 };
 
 export default function ExpenseInputComponent({
   labelId,
   labelText,
+  type
 }: Props) {
   return (
     <div className='flex flex-col mb-4'>
@@ -14,7 +16,7 @@ export default function ExpenseInputComponent({
       </label>
       <input
         className='border border-gray-600 rounded-[0.2rem] w-[70%] p-2'
-        type='number'
+        type={type}
         id={labelId}
       />
     </div>

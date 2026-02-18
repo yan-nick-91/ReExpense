@@ -4,9 +4,11 @@ import DashboardPage from '../view/pages/DashboardPage';
 import HomePage from '../view/pages/HomePage';
 
 export default function IndexRoute() {
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated,
+  const { isAuthenticated, loading } = useSelector(
+    (state: RootState) => state.auth,
   );
+
+  if (loading) return null;
 
   return isAuthenticated ? <DashboardPage /> : <HomePage />;
 }

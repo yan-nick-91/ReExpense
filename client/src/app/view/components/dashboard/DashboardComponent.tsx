@@ -13,7 +13,6 @@ export default function DashboardComponent() {
   >(undefined);
 
   const openExpenseModal = (type: ExpenseModalType) => {
-    console.log('Opening type:', type);
     setActiveExpenseModal(type);
   };
   const closeExpenseModal = () => setActiveExpenseModal(undefined);
@@ -42,29 +41,26 @@ export default function DashboardComponent() {
           <TransactionActivities />
         </section>
       </div>
-      {/* income */}
       {activeExpenseModal === 'income' && (
         <ExpenseFormModal formHeaderText='Income' onClose={closeExpenseModal}>
-          {/* <IncomeTransaction /> */}
           <ExpenseInputComponent
             labelId='amount of income currency'
             labelText='Amount of income currency'
+            type='number'
           />
           <ExpenseInputComponent
             labelId='category'
             labelText='Category'
+            type='text'
           />
         </ExpenseFormModal>
       )}
 
-      {/* income */}
       {activeExpenseModal === 'outcome' && (
         <ExpenseFormModal formHeaderText='Outcome' onClose={closeExpenseModal}>
           test
         </ExpenseFormModal>
       )}
     </div>
-
-    // modal opens here
   );
 }
