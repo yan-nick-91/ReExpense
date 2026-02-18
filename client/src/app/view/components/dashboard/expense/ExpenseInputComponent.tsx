@@ -1,18 +1,18 @@
 type Props = {
   labelId: string;
   labelText: string;
-  type: string
+  type: string;
 };
 
 export default function ExpenseInputComponent({
   labelId,
   labelText,
-  type
+  type,
 }: Props) {
   return (
     <div className='flex flex-col mb-4'>
       <label htmlFor={labelId} className='mb-2'>
-        {labelText}:
+        {labelText}
       </label>
       <input
         className='border border-gray-600 rounded-[0.2rem] w-[70%] p-2'

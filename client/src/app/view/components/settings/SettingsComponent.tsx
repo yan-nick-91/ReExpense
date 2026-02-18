@@ -35,9 +35,8 @@ export default function SettingsComponent() {
 
     const timer = setTimeout(() => {
       dispatch(resetSuccessPassword());
-
-    }, 3000)
-    return () => clearTimeout(timer)
+    }, 3000);
+    return () => clearTimeout(timer);
   }, [updatePasswordSuccessful, dispatch]);
 
   const submitPasswordUpdater = async (e: SubmitEvent<HTMLFormElement>) => {
@@ -69,7 +68,7 @@ export default function SettingsComponent() {
     if (!isValid) return;
 
     try {
-      await updatePasswordController(dispatch, {
+      updatePasswordController(dispatch, {
         currentPassword,
         newPassword,
       });

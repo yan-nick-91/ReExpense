@@ -5,11 +5,14 @@ import { getAllTransaction } from '../../../api/transactionHttpHandler';
 import type { AppDispatch, RootState } from '../../../store/store';
 
 interface TransactionProps {
-  onOpenIncomeModal: () => void
-  onOpenOutcomeModal: () => void
+  onOpenIncomeModal: () => void;
+  onOpenOutcomeModal: () => void;
 }
 
-export default function TransactionComponent({ onOpenIncomeModal, onOpenOutcomeModal}: TransactionProps) {
+export default function TransactionComponent({
+  onOpenIncomeModal,
+  onOpenOutcomeModal,
+}: TransactionProps) {
   const dispatch = useDispatch<AppDispatch>();
 
   const transactions = useSelector(
@@ -26,14 +29,17 @@ export default function TransactionComponent({ onOpenIncomeModal, onOpenOutcomeM
     return acc;
   }, 0);
 
-
   return (
     <div className='p-4'>
       <p className='mb-4'>Current currency: {currentAmount.toFixed(2)}</p>
-      <div className='border border-gray-400 mb-4'/>
+      <div className='border border-gray-400 mb-4' />
       <div className='flex gap-4'>
-        <Button theme={'primary'} onClick={onOpenIncomeModal}>Income</Button>
-        <Button theme={'primary'} onClick={onOpenOutcomeModal}>Outcome</Button>
+        <Button theme={'primary'} onClick={onOpenIncomeModal}>
+          Income
+        </Button>
+        <Button theme={'primary'} onClick={onOpenOutcomeModal}>
+          Outcome
+        </Button>
       </div>
     </div>
   );

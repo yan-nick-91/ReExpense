@@ -65,10 +65,6 @@ export default function RegisterComponent() {
       'Passwords do not match',
     );
 
-    // setEmailError(emailResult.error);
-    // setPasswordError(passwordResult.error);
-    // setConfirmPasswordError(confirmPasswordResult.error!);
-
     const newErrors: ErrorState = {
       email: emailResult.error,
       password: passwordResult.error,
@@ -83,7 +79,7 @@ export default function RegisterComponent() {
     if (!isValid) return;
 
     try {
-      await registerController(dispatch, {
+      registerController(dispatch, {
         email: form.email,
         password: form.password,
       });
