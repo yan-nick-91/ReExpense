@@ -52,7 +52,7 @@ router.post('/create', authMiddleware, (req: AuthRequest, res) => {
   res.status(201).json(transaction);
 });
 
-router.get("", authMiddleware, (req: AuthRequest, res) => {
+router.get('', authMiddleware, (req: AuthRequest, res) => {
   const userId = req.user.id;
   const transactions = loadTransactions();
 
