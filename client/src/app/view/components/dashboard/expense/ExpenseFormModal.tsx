@@ -3,13 +3,16 @@ import Button from '../../../UI/Button';
 import ExpenseInputComponent from './ExpenseInputComponent';
 import { validationResult } from '../../../../validations/globalValidation';
 import clsx from 'clsx';
+import { createTransactionController } from '../../../../controllers/transactionController';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '../../../../store/store';
 
 type ExpenseType = 'income' | 'outcome';
 
 type Props = {
   expenseType: ExpenseType;
   onClose: () => void;
-}
+};
 
 type FormState = {
   amountInCurrency: string;
@@ -22,6 +25,11 @@ type ErrorState = {
 };
 
 export default function ExpenseFormModal({ expenseType, onClose }: Props) {
+  const dispatch = useDispatch<AppDispatch>();
+  const createTransactionSuccessful = useSelector(
+    (state: RootState) => state.transaction.success,
+  );
+
   const [form, setForm] = useState<FormState>({
     amountInCurrency: '',
     category: '',
@@ -60,7 +68,18 @@ export default function ExpenseFormModal({ expenseType, onClose }: Props) {
     const isValid = amountInCurrencyResult.valid && categoryResult.valid;
 
     if (!isValid) return;
-    console.log(form);
+
+    const currencyAsNumber: number = +form.amountInCurrency;
+
+    try {
+      createTransactionController(dispatch, {
+        currency: currencyAsNumber,
+        category: form.category,
+        type: expenseType,
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -102,6 +121,11 @@ export default function ExpenseFormModal({ expenseType, onClose }: Props) {
             <p className='text-red-600 text-sm' role='alert'>
               {errors.category}
             </p>
+          )}
+        </div>
+        <div>
+          {createTransactionSuccessful && (
+            <p className='text-green-600 mb-4'>Transaction created</p>
           )}
         </div>
         <div className='flex gap-4'>
