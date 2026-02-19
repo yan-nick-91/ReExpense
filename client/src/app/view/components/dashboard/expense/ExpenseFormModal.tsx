@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type SubmitEvent } from 'react';
+import { useEffect, useState, type ChangeEvent, type SubmitEvent } from 'react';
 import Button from '../../../UI/Button';
 import ExpenseInputComponent from './ExpenseInputComponent';
 import { validationResult } from '../../../../validations/globalValidation';
@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { createTransactionController } from '../../../../controllers/transactionController';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../../../store/store';
+import { resetSuccessCreate } from '../../../../store/slice/transactionSlice';
 
 type ExpenseType = 'income' | 'outcome';
 
@@ -36,6 +37,15 @@ export default function ExpenseFormModal({ expenseType, onClose }: Props) {
   });
 
   const [errors, setErrors] = useState<ErrorState>({});
+
+  useEffect(() => {
+    if (!createTransactionSuccessful) return;
+
+    const timer = setTimeout(() => {
+      dispatch(resetSuccessCreate());
+    }, 3000);
+    return () => clearTimeout(timer)
+  }, [createTransactionSuccessful, dispatch]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
