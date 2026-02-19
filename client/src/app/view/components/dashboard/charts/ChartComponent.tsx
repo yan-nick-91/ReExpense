@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Button from '../../../UI/Button';
-import LineDiagramChart from './LineDiagramChart';
-import PieDiagramChart from './PieDiagramChart';
+import LineChartDisplay from './LineChartDisplay';
+import PieChartDisplay from './PieChartDisplay';
 
 type ChartType = 'line' | 'pie';
 
@@ -18,8 +18,8 @@ export default function ChartComponent() {
           Pie chart
         </Button>
       </div>
-      {activeChart === 'line' && <LineDiagramChart />}
-      {activeChart === 'pie' && <PieDiagramChart />}
+      {activeChart === 'line' && <LineChartDisplay />}
+      {activeChart === 'pie' && <PieChartDisplay />}
     </>
   );
 }
