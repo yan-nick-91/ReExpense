@@ -7,6 +7,7 @@ import DashboardPage from '../view/pages/DashboardPage';
 import ProtectedRoute from './ProtectedRoute';
 import IndexRoute from './IndexRoute';
 import SettingsPage from '../view/pages/SettingsPage';
+import TransactionDetailPage from '../view/pages/TransactionDetailPage';
 
 const router = createBrowserRouter([
   {
@@ -19,8 +20,12 @@ const router = createBrowserRouter([
       {
         element: <ProtectedRoute />,
         children: [
-          { path: '/', element: <DashboardPage /> }, 
-          { path: '/settings', element: <SettingsPage />}
+          { path: '/', element: <DashboardPage /> },
+          { path: '/settings', element: <SettingsPage /> },
+          {
+            path: '/transactions/:transactionId',
+            element: <TransactionDetailPage />,
+          },
         ],
       },
     ],

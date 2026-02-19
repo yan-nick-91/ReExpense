@@ -2,10 +2,8 @@ import { useState, useEffect, type SubmitEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../../../store/store';
 import { resetSuccessPassword } from '../../../store/slice/authSlice';
-import {
-  validationResult,
-  verifyConfirmedPasswordInputField,
-} from '../../../validations/authValidation';
+import { validationResult } from '../../../validations/globalValidation';
+import { verifyConfirmedPasswordInputField } from '../../../validations/authValidation';
 import { updatePasswordController } from '../../../controllers/authController';
 
 import Button from '../../UI/Button';

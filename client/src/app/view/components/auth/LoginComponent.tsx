@@ -2,7 +2,7 @@ import { useEffect, useState, type SubmitEvent, type ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../../store/store';
 import AuthContainer from '../../UI/FormContainer';
-import { validationResult } from '../../../validations/authValidation';
+import { validationResult } from '../../../validations/globalValidation';
 import { loginController } from '../../../controllers/authController';
 import Button from '../../UI/Button';
 import { NavLink, useNavigate } from 'react-router-dom';

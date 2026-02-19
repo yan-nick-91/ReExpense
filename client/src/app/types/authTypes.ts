@@ -1,10 +1,10 @@
-export interface User {
+export type User = {
   id: string;
   email: string;
   password: string;
 }
 
-export interface AuthState {
+export type AuthState = {
   user?: SafeUser;
   isAuthenticated: boolean;
   error?: string;

@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import TransactionComponent from '../transactions/TransactionComponent';
-import ChartDisplay from './ChartDisplay';
+import ChartComponent from './charts/ChartComponent';
 import ExpenseFormModal from './expense/ExpenseFormModal';
-import ExpenseInputComponent from './expense/ExpenseInputComponent';
 import TransactionActivities from '../transactions/TransactionActivities';
 
 type ExpenseModalType = 'income' | 'outcome';
@@ -21,9 +20,10 @@ export default function DashboardComponent() {
     <div className='grid grid-cols-2 w-[90%] m-auto'>
       <section className='p-4'>
         <div className='border border-gray-600 w-full rounded-[0.2rem]'>
-          <div className='bg-[#090979] text-white p-1 pl-2 text-[1.2rem] h-10' />
-          <ChartDisplay />
-          <div className=''></div>
+          <div className='bg-[#090979] text-white p-1 pl-2 text-[1.2rem] h-10'>
+            <h2>Diagram Chart</h2>
+          </div>
+          <ChartComponent />
         </div>
       </section>
       <div className='p-4'>
@@ -42,24 +42,17 @@ export default function DashboardComponent() {
         </section>
       </div>
       {activeExpenseModal === 'income' && (
-        <ExpenseFormModal formHeaderText='Income' onClose={closeExpenseModal}>
-          <ExpenseInputComponent
-            labelId='amount of income currency'
-            labelText='Amount of income currency'
-            type='number'
-          />
-          <ExpenseInputComponent
-            labelId='category'
-            labelText='Category'
-            type='text'
-          />
-        </ExpenseFormModal>
+        <ExpenseFormModal
+          expenseType={activeExpenseModal}
+          onClose={closeExpenseModal}
+        />
       )}
 
       {activeExpenseModal === 'outcome' && (
-        <ExpenseFormModal formHeaderText='Outcome' onClose={closeExpenseModal}>
-          test
-        </ExpenseFormModal>
+        <ExpenseFormModal
+          expenseType={activeExpenseModal}
+          onClose={closeExpenseModal}
+        />
       )}
     </div>
   );

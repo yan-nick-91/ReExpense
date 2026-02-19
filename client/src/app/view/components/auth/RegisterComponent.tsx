@@ -6,10 +6,10 @@ import { registerController } from '../../../controllers/authController';
 import AuthContainer from '../../UI/FormContainer';
 import Button from '../../UI/Button';
 import {
-  validationResult,
-  verifyConfirmedPasswordInputField,
-} from '../../../validations/authValidation';
+  validationResult
+} from '../../../validations/globalValidation';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { verifyConfirmedPasswordInputField } from '../../../validations/authValidation';
 
 type FormState = {
   email: string;

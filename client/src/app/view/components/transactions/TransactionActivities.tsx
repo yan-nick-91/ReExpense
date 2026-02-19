@@ -1,5 +1,7 @@
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../../store/store';
+import clsx from 'clsx';
+import Button from '../../UI/Button';
 
 export default function TransactionActivities() {
   const transactions = useSelector(
@@ -20,11 +22,15 @@ export default function TransactionActivities() {
             <div className='flex flex-row gap-2'>
               <p>{convertDateToLocaleDate(item.date)}</p>
               <p className='w-[15%]'>{item.category}</p>
-              <p className='w-[10%]'>
-                {item.type === 'outcome' ? '-' : ''} {item.currency.toFixed(2)}
+              <p
+                className={clsx(
+                  `w-[20%] text-right ${item.type === 'outcome' ? 'text-red-500' : 'text-green-600'}`,
+                )}
+              >
+                {item.type === 'outcome' ? '-' : '+'} {item.currency.toFixed(2)}
               </p>
+              <Button className='ml-6' theme='primary' navigateTo={`/transactions/${item.id}`}>Edit</Button>
             </div>
-
             <div className='border border-gray-400' />
           </li>
         ))}

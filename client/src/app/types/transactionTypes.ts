@@ -1,6 +1,6 @@
 export type TransactionType = 'income' | 'outcome';
 
-export interface Transaction {
+export type Transaction = {
   id: string;
   userId: string;
   currency: number;
@@ -9,7 +9,7 @@ export interface Transaction {
   date: string;
 }
 
-export interface CreateTransactionPayload {
+export type CreateTransactionPayload = {
   currency: number;
   category: string;
   type: TransactionType;
