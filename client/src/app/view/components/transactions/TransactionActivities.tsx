@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../../store/store';
 import clsx from 'clsx';
+import Button from '../../UI/Button';
 
 export default function TransactionActivities() {
   const transactions = useSelector(
@@ -28,6 +29,7 @@ export default function TransactionActivities() {
               >
                 {item.type === 'outcome' ? '-' : '+'} {item.currency.toFixed(2)}
               </p>
+              <Button className='ml-6' theme='primary' navigateTo={`/transactions/${item.id}`}>Edit</Button>
             </div>
             <div className='border border-gray-400' />
           </li>
