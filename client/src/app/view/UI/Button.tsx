@@ -38,7 +38,7 @@ export default function Button({
     return (
       <NavLink
         className={theme === 'default' ? className : classes}
-        to={`/${navigateTo!}`}
+        to={`${navigateTo!}`}
       >
         {children}
       </NavLink>
