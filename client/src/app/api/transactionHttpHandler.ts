@@ -5,7 +5,7 @@ import { API_URL } from './config';
 
 export const createTransaction = createAsyncThunk<
   Transaction,
-  { currency: number; category: string; type: TransactionType }
+  { amount: number; category: string; type: TransactionType }
 >('/transactions/create', async (payload) => {
   const token = sessionStorage.getItem('token');
 

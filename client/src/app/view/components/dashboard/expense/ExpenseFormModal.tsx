@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../../../store/store';
 import { resetSuccessCreate } from '../../../../store/slice/transactionSlice';
 
-type ExpenseType = 'income' | 'outcome';
+type ExpenseType = 'income' | 'expense';
 
 type Props = {
   expenseType: ExpenseType;
@@ -16,12 +16,12 @@ type Props = {
 };
 
 type FormState = {
-  amountInCurrency: string;
+  amount: string;
   category: string;
 };
 
 type ErrorState = {
-  amountInCurrency?: string;
+  amount?: string;
   category?: string;
 };
 
@@ -32,7 +32,7 @@ export default function ExpenseFormModal({ expenseType, onClose }: Props) {
   );
 
   const [form, setForm] = useState<FormState>({
-    amountInCurrency: '',
+    amount: '',
     category: '',
   });
 
@@ -59,8 +59,8 @@ export default function ExpenseFormModal({ expenseType, onClose }: Props) {
   const submitExpenseHandler = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const amountInCurrencyResult = validationResult(
-      form.amountInCurrency,
+    const amountResult = validationResult(
+      form.amount,
       'Amount for currency is required',
     );
     const categoryResult = validationResult(
@@ -69,21 +69,21 @@ export default function ExpenseFormModal({ expenseType, onClose }: Props) {
     );
 
     const newErrors: ErrorState = {
-      amountInCurrency: amountInCurrencyResult.error,
+      amount: amountResult.error,
       category: categoryResult.error,
     };
 
     setErrors(newErrors);
 
-    const isValid = amountInCurrencyResult.valid && categoryResult.valid;
+    const isValid = amountResult.valid && categoryResult.valid;
 
     if (!isValid) return;
 
-    const currencyAsNumber: number = +form.amountInCurrency;
+    const amountAsNumber: number = +form.amount;
 
     try {
       createTransactionController(dispatch, {
-        currency: currencyAsNumber,
+        amount: amountAsNumber,
         category: form.category,
         type: expenseType,
       });
@@ -103,20 +103,20 @@ export default function ExpenseFormModal({ expenseType, onClose }: Props) {
         onSubmit={submitExpenseHandler}
       >
         <h2 className='text-xl font-bold mb-4'>
-          Add {`${expenseType === 'income' ? 'income' : 'outcome'}`}
+          Add {`${expenseType === 'income' ? 'income' : 'expense'}`}
         </h2>
         <div className='mb-8'>
           <ExpenseInputComponent
-            labelId='amountInCurrency'
-            labelText={`Amount in currency`}
-            name='amountInCurrency'
+            labelId='amount'
+            labelText='Amount'
+            name='amount'
             type='number'
-            value={form.amountInCurrency}
+            value={form.amount}
             onChange={handleChange}
           />
-          {errors.amountInCurrency && (
+          {errors.amount && (
             <p className='text-red-600 text-sm' role='alert'>
-              {errors.amountInCurrency}
+              {errors.amount}
             </p>
           )}
           <ExpenseInputComponent
@@ -140,7 +140,7 @@ export default function ExpenseFormModal({ expenseType, onClose }: Props) {
         </div>
         <div className='flex gap-4'>
           <Button theme='primary' type='submit'>
-            Submit Expense
+            Submit Transaction
           </Button>
           <Button theme='primary' onClick={onClose}>
             Close Form

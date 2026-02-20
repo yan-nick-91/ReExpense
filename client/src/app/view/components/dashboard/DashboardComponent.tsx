@@ -3,17 +3,26 @@ import TransactionComponent from '../transactions/TransactionComponent';
 import ChartComponent from './charts/ChartComponent';
 import ExpenseFormModal from './expense/ExpenseFormModal';
 import TransactionActivities from '../transactions/TransactionActivities';
+import type { RootState } from '../../../store/store';
+import { useSelector } from 'react-redux';
+import { resetSuccessCreate } from '../../../store/slice/transactionSlice';
 
-type ExpenseModalType = 'income' | 'outcome';
+type ExpenseModalType = 'income' | 'expense';
 
 export default function DashboardComponent() {
+  const transactionsSuccess = useSelector((state: RootState) => state.transaction.success)
+  
   const [activeExpenseModal, setActiveExpenseModal] = useState<
     ExpenseModalType | undefined
   >(undefined);
 
+
+
   const openExpenseModal = (type: ExpenseModalType) => {
     setActiveExpenseModal(type);
+    if (transactionsSuccess) resetSuccessCreate()
   };
+
   const closeExpenseModal = () => setActiveExpenseModal(undefined);
 
   return (
@@ -31,7 +40,7 @@ export default function DashboardComponent() {
           <div className='bg-[#090979] text-white p-1 pl-2 text-[1.2rem] h-10' />
           <TransactionComponent
             onOpenIncomeModal={() => openExpenseModal('income')}
-            onOpenOutcomeModal={() => openExpenseModal('outcome')}
+            onOpenOutcomeModal={() => openExpenseModal('expense')}
           />
         </section>
         <section className='border border-gray-600 w-full rounded-[0.2rem]'>
@@ -48,7 +57,7 @@ export default function DashboardComponent() {
         />
       )}
 
-      {activeExpenseModal === 'outcome' && (
+      {activeExpenseModal === 'expense' && (
         <ExpenseFormModal
           expenseType={activeExpenseModal}
           onClose={closeExpenseModal}
