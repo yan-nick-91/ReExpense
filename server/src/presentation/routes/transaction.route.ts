@@ -17,13 +17,13 @@ let transactions = loadTransactions();
 let generateId = uuid();
 
 router.post('/create', authMiddleware, (req: AuthRequest, res) => {
-  const { currency, category, type } = req.body;
+  const { amount, category, type } = req.body;
 
-  if (!currency || !category || !type) {
+  if (!amount || !category || !type) {
     return res.status(400).json({ error: 'Not all fields contains a value' });
   }
 
-  if (currency <= 0.0) {
+  if (amount <= 0.0) {
     return res.status(400).json({
       error: 'Amount must be greater then 0.0 to create a new transaction',
     });
@@ -40,7 +40,7 @@ router.post('/create', authMiddleware, (req: AuthRequest, res) => {
   const transaction: Transaction = {
     id: generateId,
     userId,
-    currency,
+    amount,
     category,
     type,
     date: new Date().toISOString(),

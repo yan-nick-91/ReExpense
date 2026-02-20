@@ -24,12 +24,12 @@ export default function TransactionActivities() {
               <p className='w-[15%]'>{item.category}</p>
               <p
                 className={clsx(
-                  `w-[20%] text-right ${item.type === 'outcome' ? 'text-red-500' : 'text-green-600'}`,
+                  `w-[20%] text-right ${item.type === 'expense' ? 'text-red-500' : 'text-green-600'}`,
                 )}
               >
-                {item.type === 'outcome' ? '-' : '+'} {item.currency.toFixed(2)}
+                {item.type === 'expense' ? '-' : '+'} {item.amount}
               </p>
-              <Button className='ml-6' theme='primary' navigateTo={`/transactions/${item.id}`}>Edit</Button>
+              <Button className='ml-6' theme='primary' navigateTo={`/transactions/${item.id}`}>Edit transaction</Button>
             </div>
             <div className='border border-gray-400' />
           </li>

@@ -2,29 +2,30 @@ import { useSelector } from 'react-redux';
 import { PieChart, Pie, Tooltip } from 'recharts';
 import type { RootState } from '../../../../store/store';
 
-export default function PieChartDisplay({
-  isAnimationActive = true,
-}: {
+type Props = {
   isAnimationActive?: boolean;
-}) {
+};
+
+export default function PieChartDisplay({ isAnimationActive = true }: Props) {
   const transactions = useSelector(
     (state: RootState) => state.transaction.items,
   );
 
   const totalIncome = transactions
     .filter((tx) => tx.type === 'income')
-    .reduce((sum, tx) => sum + tx.currency, 0);
+    .reduce((sum, tx) => sum + tx.amount, 0);
 
-  const totalOutcome = transactions
-    .filter((tx) => tx.type === 'outcome')
-    .reduce((sum, tx) => sum + tx.currency, 0);
+  const totalExpense = transactions
+    .filter((tx) => tx.type === 'expense')
+    .reduce((sum, tx) => sum + tx.amount, 0);
 
   const piaData = [
     { name: 'Income', value: totalIncome, fill: '#196090' },
-    { name: 'Outcome', value: totalOutcome, fill: '#AA0E14' },
+    { name: 'Expense', value: totalExpense, fill: '#AA0E14' },
   ];
   return (
-    <>
+    <div className='flex flex-col p-2'>
+    <strong>Total balance {totalIncome - totalExpense}</strong>
       <PieChart width={400} height={400}>
         <Pie
           data={piaData}
@@ -45,9 +46,9 @@ export default function PieChartDisplay({
         </div>
         <div className='flex items-center gap-2 w-32'>
           <div className='h-3 w-6 bg-[#AA0E14]' />
-          <p className='leading-none text-[1rem]'>Outcome</p>
+          <p className='leading-none text-[1rem]'>Expense</p>
         </div>
       </div>
-    </>
+    </div>
   );
 }
