@@ -27,7 +27,7 @@ export default function TransactionActivities() {
                   `w-[20%] text-right ${item.type === 'expense' ? 'text-red-500' : 'text-green-600'}`,
                 )}
               >
-                {item.type === 'expense' ? '-' : '+'} {item.amount}
+                {item.type === 'expense' ? '-' : '+'} {item.amount.toFixed(2)}
               </p>
               <Button className='ml-6' theme='primary' navigateTo={`/transactions/${item.id}`}>Edit transaction</Button>
             </div>
