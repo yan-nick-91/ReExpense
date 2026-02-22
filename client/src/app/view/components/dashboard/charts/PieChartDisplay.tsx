@@ -19,16 +19,25 @@ export default function PieChartDisplay({ isAnimationActive = true }: Props) {
     .filter((tx) => tx.type === 'expense')
     .reduce((sum, tx) => sum + tx.amount, 0);
 
-  const piaData = [
+  const balance = totalIncome - totalExpense;
+  const isPositive = balance >= 0;
+
+  const pieData = [
     { name: 'Income', value: totalIncome, fill: '#196090' },
     { name: 'Expense', value: totalExpense, fill: '#AA0E14' },
   ];
+
   return (
     <div className='flex flex-col p-2'>
-    <strong>Total balance {totalIncome - totalExpense}</strong>
+      <strong>
+        Total balance:{' '}
+        <span className={`${isPositive ? '' : 'text-red-500'}`}>
+          {isPositive ? '' : '-'}{Math.abs(balance).toFixed(2)}
+        </span>
+      </strong>
       <PieChart width={400} height={400}>
         <Pie
-          data={piaData}
+          data={pieData}
           dataKey={'value'}
           nameKey={'name'}
           cx='50%'
