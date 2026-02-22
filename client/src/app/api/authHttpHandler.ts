@@ -50,9 +50,8 @@ export const isAuthenticated = createAsyncThunk<
   if (!token) throw rejectWithValue('NO_TOKEN');
 
   try {
-    const res = await axios.post<{ user: SafeUser }>(
+    const res = await axios.get<{ user: SafeUser }>(
       `${API_URL}/auth/authenticated`,
-      {},
       {
         headers: {
           Authorization: `Bearer ${token}`,
