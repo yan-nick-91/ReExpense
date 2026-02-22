@@ -1,8 +1,10 @@
+import 'reflect-metadata'
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import authRoutes from './presentation/routes/auth.routes.js';
 import transactionRoutes from './presentation/routes/transaction.route.js';
-import cors from 'cors';
+import { AppDataSource } from './infrastructure/database/data-source.js';
 
 dotenv.config();
 
@@ -12,20 +14,31 @@ const CLIENT_PORT = process.env.CLIENT_PORT;
 
 app.use(
   cors({
-    origin: `https://localhost:${CLIENT_PORT}`,
-    credentials: true,
-  }),
-);
+      origin: `https://localhost:${CLIENT_PORT}`,
+      credentials: true,
+    }),
+  );
 
-app.use(express.json());
+  app.use(express.json());
 
-app.use('/api/auth', authRoutes);
-app.use('/api/transactions', transactionRoutes);
+  app.use('/api/auth', authRoutes);
+  app.use('/api/transactions', transactionRoutes);
 
-app.get('/', (_req, res) => {
-  res.json({ message: 'App is running 🚀' });
-});
+  app.get('/', (_req, res) => {
+    res.json({ message: 'App is running 🚀' });
+  });
+  
+const startServer = async () => {
+  try {
+    await AppDataSource.initialize()
 
-app.listen(PORT, () => {
-  console.log(`⚡ HTTP server is running on http://localhost:${PORT}`);
-});
+    app.listen(PORT, () => {
+      console.log(`⚡ HTTP server is running on http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    console.error('Failed to start server:', err);
+    process.exit(1);
+  }
+};
+
+startServer()
