@@ -16,7 +16,6 @@ router.post('/create', authMiddleware, async (req: AuthRequest, res) => {
 });
 
 router.get("/", authMiddleware, async (req: AuthRequest, res) => {
-  console.log('GET /api/transactions HIT');
   const userId = req.user.id;
   const result =
     await transactionQueryService.getAllTransactionByUserId(userId);

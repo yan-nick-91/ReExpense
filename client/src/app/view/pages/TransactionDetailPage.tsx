@@ -1,3 +1,5 @@
+import TransactionDetailComponent from '../components/dashboard/transactions/TransactionDetailComponent';
+
 export default function TransactionDetailPage() {
-    return <div>Transaction Detail Page</div>;
+  return <TransactionDetailComponent />;
 }

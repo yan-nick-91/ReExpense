@@ -17,10 +17,6 @@ export class TransactionCommandService {
   ): Promise<TransactionResponseDTO> {
     const { amount, category, type } = dto;
 
-    // if (!Object.values(TransactionType).includes(type)) {
-    //   throw new Error('Invalid transaction type');
-    // }
-
     if (!amount || !category || !type) {
       throw new Error('Not all fields contains a value');
     }

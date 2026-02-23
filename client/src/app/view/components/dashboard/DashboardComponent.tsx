@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import TransactionComponent from '../transactions/TransactionComponent';
+import TransactionComponent from './transactions/TransactionComponent';
 import ChartComponent from './charts/ChartComponent';
-import ExpenseFormModal from './expense/ExpenseFormModal';
-import TransactionActivities from '../transactions/TransactionActivities';
+import TransactionFormModal from './transactions/TransactionFormModal';
+import TransactionActivities from './transactions/TransactionActivities';
 import type { RootState } from '../../../store/store';
 import { useSelector } from 'react-redux';
 import { resetSuccessCreate } from '../../../store/slice/transactionSlice';
@@ -16,7 +16,9 @@ export default function DashboardComponent() {
     ExpenseModalType | undefined
   >(undefined);
 
-
+  useState(() => {
+    document.title = 'ReExpense | Dashboard'
+  })
 
   const openExpenseModal = (type: ExpenseModalType) => {
     setActiveExpenseModal(type);
@@ -26,7 +28,7 @@ export default function DashboardComponent() {
   const closeExpenseModal = () => setActiveExpenseModal(undefined);
 
   return (
-    <div className='grid grid-cols-2 w-[90%] m-auto'>
+    <div className='grid lg:grid-cols-2 w-[90%] m-auto sm:grid-cols-1'>
       <section className='p-4'>
         <div className='border border-gray-600 w-full rounded-[0.2rem]'>
           <div className='bg-[#090979] text-white p-1 pl-2 text-[1.2rem] h-10'>
@@ -37,7 +39,9 @@ export default function DashboardComponent() {
       </section>
       <div className='p-4'>
         <section className='border border-gray-600 w-full rounded-[0.2rem] mb-8'>
-          <div className='bg-[#090979] text-white p-1 pl-2 text-[1.2rem] h-10' />
+          <div className='bg-[#090979] text-white p-1 pl-2 text-[1.2rem] h-10'>
+            <h2>Transaction Manager</h2>
+          </div>
           <TransactionComponent
             onOpenIncomeModal={() => openExpenseModal('income')}
             onOpenOutcomeModal={() => openExpenseModal('expense')}
@@ -51,14 +55,14 @@ export default function DashboardComponent() {
         </section>
       </div>
       {activeExpenseModal === 'income' && (
-        <ExpenseFormModal
+        <TransactionFormModal
           expenseType={activeExpenseModal}
           onClose={closeExpenseModal}
         />
       )}
 
       {activeExpenseModal === 'expense' && (
-        <ExpenseFormModal
+        <TransactionFormModal
           expenseType={activeExpenseModal}
           onClose={closeExpenseModal}
         />

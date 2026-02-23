@@ -1,6 +1,11 @@
+import { useEffect } from 'react';
 import Button from '../../UI/Button';
 
 export default function HomeComponent() {
+  useEffect(() => {
+    document.title = 'ReExpense'
+  })
+  
   return (
     <div className='flex items-center justify-center h-screen'>
       <div className='border border-gray-600 w-[80%] rounded-[0.2rem]'>

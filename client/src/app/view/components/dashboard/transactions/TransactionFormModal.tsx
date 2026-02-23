@@ -1,6 +1,6 @@
 import { useEffect, useState, type ChangeEvent, type SubmitEvent } from 'react';
 import Button from '../../../UI/Button';
-import ExpenseInputComponent from './ExpenseInputComponent';
+import TransactionInputComponent from './TransactionInputComponent';
 import { validationResult } from '../../../../validations/globalValidation';
 import clsx from 'clsx';
 import { createTransactionController } from '../../../../controllers/transactionController';
@@ -106,7 +106,7 @@ export default function ExpenseFormModal({ expenseType, onClose }: Props) {
           Add {`${expenseType === 'income' ? 'income' : 'expense'}`}
         </h2>
         <div className='mb-8'>
-          <ExpenseInputComponent
+          <TransactionInputComponent
             labelId='amount'
             labelText='Amount'
             name='amount'
@@ -119,7 +119,7 @@ export default function ExpenseFormModal({ expenseType, onClose }: Props) {
               {errors.amount}
             </p>
           )}
-          <ExpenseInputComponent
+          <TransactionInputComponent
             labelId='category'
             labelText='Category'
             name='category'

@@ -3,9 +3,11 @@ import bcrypt from 'bcryptjs';
 import { JWT_SECRET } from '../../../../config/config.js';
 import { AppDataSource } from '../../../infrastructure/database/data-source.js';
 import { User } from '../../../domain/entities/User.js';
+import { MailCommandService } from './MailCommandService.js';
 import type { AuthUserDTO } from '../../dto/in/AuthUserDTO.js';
 import type { UserTokenResponseDTO } from '../../dto/out/UserTokenResponseDTO.js';
 import type { AuthUpdatePasswordDTO } from '../../dto/in/AuthUpdatePasswordDTO.js';
+import type { ResetPasswordRequestDTO } from './../../dto/in/ResetPasswordRequestDTO.js';
 import {
   emailAlreadyTaken,
   isValidEmail,
@@ -14,9 +16,12 @@ import {
   verifyPassword,
 } from '../../../domain/business/validations.js';
 import { InvalidCredentialsException } from '../../../domain/exceptions/InvalidCredentialsException.js';
+import { NotFoundException } from '../../../domain/exceptions/NotFoundException.js';
+import { generateResetToken } from '../../utils/generators.js';
 
 export class AuthCommandService {
   private userRepository = AppDataSource.getRepository(User);
+  private mailCommandService = new MailCommandService();
 
   async register(dto: AuthUserDTO): Promise<UserTokenResponseDTO> {
     const { email, password } = dto;
@@ -72,6 +77,49 @@ export class AuthCommandService {
     const savedUser = await this.userRepository.save(user!);
     const newToken = this.signToken(savedUser.id);
     return { token: newToken };
+  }
+
+  async forgotPassword(dto: ResetPasswordRequestDTO): Promise<{message: string}> {
+    const { email } = dto;
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (!user) throw new NotFoundException("User's email not found");
+
+    const { resetToken, hashedToken } = generateResetToken();
+    user.passwordResetToken = hashedToken;
+    const oneHour = 1000 * 60 * 60;
+    user.passwordResetExpires = new Date(Date.now() + oneHour);
+    await this.userRepository.save(user);
+    const resetUrl = `${process.env.FRONTEND_URL}/reset/password/${resetToken}`;
+    await this.mailCommandService.forgotPassword(
+      { email: user.email },
+      resetUrl,
+    );
+    return { message: `Message sent to email ${user.email}`}
+  }
+
+  async resetPassword(token: string, newPassword: string) {
+    const hashedToken = require('crypto')
+      .createHash('sha256')
+      .update(token)
+      .digest('hex');
+
+    const user = await this.userRepository.findOne({
+      where: { passwordResetToken: hashedToken },
+    });
+
+    if (
+      !user ||
+      !user.passwordResetExpires ||
+      user.passwordResetExpires < new Date()
+    ) {
+      throw new Error('Token is invalid or expired');
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.passwordResetToken = null;
+    user.passwordResetExpires = null;
+
+    await this.userRepository.save(user);
   }
 
   // helpers

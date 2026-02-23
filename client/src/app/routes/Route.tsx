@@ -8,6 +8,7 @@ import ProtectedRoute from './ProtectedRoute';
 import IndexRoute from './IndexRoute';
 import SettingsPage from '../view/pages/SettingsPage';
 import TransactionDetailPage from '../view/pages/TransactionDetailPage';
+import ForgotPasswordPage from '../view/pages/ForgotPasswordPage';
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,7 @@ const router = createBrowserRouter([
       { index: true, element: <IndexRoute /> },
       { path: '/login', element: <LoginPage /> },
       { path: '/register', element: <RegisterPage /> },
+      { path: '/forgot/password', element: <ForgotPasswordPage />},
       {
         element: <ProtectedRoute />,
         children: [
