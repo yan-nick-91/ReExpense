@@ -33,6 +33,10 @@ export default function LoginComponent() {
   const [errors, setErrors] = useState<ErrorState>({});
 
   useEffect(() => {
+    document.title = 'ReExpense | Login'
+  })
+
+  useEffect(() => {
     if (isAuthenticated) navigate('/');
   }, [isAuthenticated, navigate]);
 
@@ -128,6 +132,17 @@ export default function LoginComponent() {
               className={'underline underline-offset-5'}
             >
               register page
+            </NavLink>
+          </p>
+        </div>
+        <div className='my-6 pl-2'>
+          <p>
+            Forgot password? Navigate to{' '}
+            <NavLink
+              to={`/forgot/password`}
+              className={'underline underline-offset-5'}
+            >
+              forgot password page
             </NavLink>
           </p>
         </div>

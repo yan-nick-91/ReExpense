@@ -5,9 +5,7 @@ import { registerController } from '../../../controllers/authController';
 
 import AuthContainer from '../../UI/FormContainer';
 import Button from '../../UI/Button';
-import {
-  validationResult
-} from '../../../validations/globalValidation';
+import { validationResult } from '../../../validations/globalValidation';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { verifyConfirmedPasswordInputField } from '../../../validations/authValidation';
 
@@ -40,6 +38,10 @@ export default function RegisterComponent() {
   const [errors, setErrors] = useState<ErrorState>({});
 
   useEffect(() => {
+    document.title = 'ReExpense | Register';
+  });
+
+  useEffect(() => {
     if (isAuthenticated) navigate('/');
   }, [isAuthenticated, navigate]);
 
@@ -58,7 +60,10 @@ export default function RegisterComponent() {
     console.log('clicked');
 
     const emailResult = validationResult(form.email, 'Email is required');
-    const passwordResult = validationResult(form.password, 'Password is required');
+    const passwordResult = validationResult(
+      form.password,
+      'Password is required',
+    );
     const confirmPasswordResult = verifyConfirmedPasswordInputField(
       form.password,
       form.confirmPassword,
