@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import Button from '../../UI/Button';
+import Button from '../../../UI/Button';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllTransaction } from '../../../api/transactionHttpHandler';
-import type { AppDispatch, RootState } from '../../../store/store';
+import type { AppDispatch, RootState } from '../../../../store/store';
+import { getAllTransactionController } from '../../../../controllers/transactionController';
 
 type Props = {
   onOpenIncomeModal: () => void;
@@ -20,7 +20,7 @@ export default function TransactionComponent({
   );
 
   useEffect(() => {
-    dispatch(getAllTransaction());
+    getAllTransactionController(dispatch);
   }, [dispatch]);
 
   const currentAmount = transactions.reduce((acc, tx) => {
