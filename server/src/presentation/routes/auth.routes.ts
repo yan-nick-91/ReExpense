@@ -1,12 +1,12 @@
 import { Router } from 'express';
-
-import { type AuthRequest } from '../../types/authTypes.js';
 import { revokeToken } from '../../infrastructure/token.store.js';
 import { authMiddleware } from '../middleware/auth.middleware.js';
 import { AuthCommandService } from '../../application/service/commands/AuthCommandService.js';
 import { AuthQueryService } from './../../application/service/queries/AuthQueryService.js';
+import { type AuthRequest } from '../../types/authTypes.js';
 import type { AuthUserDTO } from '../../application/dto/in/AuthUserDTO.js';
 import type { AuthUpdatePasswordDTO } from './../../application/dto/in/AuthUpdatePasswordDTO.js';
+import type { ResetPasswordRequestDTO } from './../../application/dto/in/ResetPasswordRequestDTO.js';
 
 const router = Router();
 const authCommandService = new AuthCommandService();
@@ -53,6 +53,28 @@ router.put(
     }
   },
 );
+
+router.post('/forgot/password', async (req, res) => {
+  try {
+    const dto: ResetPasswordRequestDTO = req.body;
+    const result = await authCommandService.forgotPassword(dto);
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.post('/reset/password/:token', async (req, res) => {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+
+  try {
+    await authCommandService.resetPassword(token, newPassword);
+    res.status(200).json({ message: 'Password updated' });
+  } catch (err) {
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
 
 router.delete('/logout', authMiddleware, (req, res) => {
   const authHeader = req.headers.authorization;
