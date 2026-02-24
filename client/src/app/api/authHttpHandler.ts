@@ -106,6 +106,35 @@ export const updatePassword = createAsyncThunk<
   },
 );
 
+export const forgotPassword = createAsyncThunk<void, { email: string }>(
+  '/auth/forgot/password',
+  async ({ email }) => {
+    const response = await axios.post(`${API_URL}/auth/forgot/password`, {
+      email,
+    });
+
+    return response.data;
+  },
+);
+
+export const validateResetToken = createAsyncThunk<void, { token: string }>(
+  'auth/reset/token/validate',
+  async ({ token }) => {
+    const response = await axios.get(`${API_URL}/auth/reset/validate/${token}`);
+    return response.data;
+  },
+);
+
+export const resetForgottenPassword = createAsyncThunk<
+  void,
+  { newPassword: string }
+>('auth/reset/password', async ({ newPassword }) => {
+  const response = await axios.post(`${API_URL}/auth/reset/password`, {
+    newPassword,
+  });
+  return response.data;
+});
+
 export const logout = createAsyncThunk<void, void, { rejectValue: string }>(
   '/auth/logout',
   async (_, { rejectWithValue }) => {
