@@ -128,7 +128,7 @@ export default function ResetPasswordComponent() {
               {errors.confirmedPassword}
             </p>
           )}
-          <Button className='mt-4 w-[12%]' theme='primary' type={'submit'}>
+          <Button className='mt-4 md:w-[15%]' theme='primary' type={'submit'}>
             Submit request
           </Button>
         </FormContainer>
