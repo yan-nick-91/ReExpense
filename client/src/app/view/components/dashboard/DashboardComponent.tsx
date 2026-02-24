@@ -1,11 +1,11 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../../store/store';
+import { resetSuccessCreate } from '../../../store/slice/transactionSlice';
 import TransactionComponent from './transactions/TransactionComponent';
 import ChartComponent from './charts/ChartComponent';
 import TransactionFormModal from './transactions/TransactionFormModal';
 import TransactionActivities from './transactions/TransactionActivities';
-import type { RootState } from '../../../store/store';
-import { useSelector } from 'react-redux';
-import { resetSuccessCreate } from '../../../store/slice/transactionSlice';
 import GoalsComponent from './goals/GoalsComponent';
 import GoalFormModal from './goals/GoalFormModal';
 
@@ -34,7 +34,6 @@ export default function DashboardComponent() {
   const openGoalModal = () => {
     setActiveGoalModal(true)
   }
-
 
   const closeExpenseModal = () => setActiveExpenseModal(undefined);
 
