@@ -30,7 +30,6 @@ export default function ResetPasswordComponent() {
   });
 
   const [errors, setErrors] = useState<ErrorState>({});
-
   const [isTokenValid, setIsTokenValid] = useState<TokenStatus>('checking');
 
   useEffect(() => {
