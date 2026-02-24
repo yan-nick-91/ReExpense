@@ -1,9 +1,12 @@
+import { validateResetToken } from './../api/authHttpHandler';
 import type { AppDispatch } from '../store/store';
 import {
   register,
   login,
   logout,
   updatePassword,
+  forgotPassword,
+  resetForgottenPassword,
 } from '../api/authHttpHandler';
 
 export const registerController = (
@@ -25,6 +28,27 @@ export const updatePasswordController = (
   data: { currentPassword: string; newPassword: string },
 ) => {
   dispatch(updatePassword(data)).unwrap();
+};
+
+export const forgotPasswordController = (
+  dispatch: AppDispatch,
+  data: { email: string },
+) => {
+  dispatch(forgotPassword(data));
+};
+
+export const validateResetTokenController = (
+  dispatch: AppDispatch,
+  data: { token: string },
+) => {
+  dispatch(validateResetToken(data));
+};
+
+export const resetForgottenPasswordController = (
+  dispatch: AppDispatch,
+  data: { newPassword: string },
+) => {
+  dispatch(resetForgottenPassword(data));
 };
 
 export const logoutController = (dispatch: AppDispatch) => {
