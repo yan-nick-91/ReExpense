@@ -14,7 +14,9 @@ function App() {
 
   return (
     <>
-      <NavBar />
+      <header>
+        <NavBar />
+      </header>
       <main>
         <Outlet />
       </main>
