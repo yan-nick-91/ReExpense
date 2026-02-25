@@ -29,6 +29,10 @@ export default function SettingsComponent() {
   >(undefined);
 
   useEffect(() => {
+    document.title = 'ReExpense | Settings'
+  })
+
+  useEffect(() => {
     if (!updatePasswordSuccessful) return;
 
     const timer = setTimeout(() => {

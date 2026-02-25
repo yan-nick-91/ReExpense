@@ -32,10 +32,16 @@ export default function PieChartDisplay({ isAnimationActive = true }: Props) {
       <strong>
         Total balance:{' '}
         <span className={`${isPositive ? '' : 'text-red-500'}`}>
-          {isPositive ? '' : '-'}{Math.abs(balance).toFixed(2)}
+          {isPositive ? '' : '-'}
+          {Math.abs(balance).toFixed(2)}
         </span>
       </strong>
-      <PieChart width={400} height={400}>
+      <PieChart
+        width={400}
+        height={400}
+        title='Pie chart of all transactions'
+        desc='This pie chart displays all the transaction between income and expenses'
+      >
         <Pie
           data={pieData}
           dataKey={'value'}

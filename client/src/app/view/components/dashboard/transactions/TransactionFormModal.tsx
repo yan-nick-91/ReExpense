@@ -87,6 +87,10 @@ export default function ExpenseFormModal({ expenseType, onClose }: Props) {
         category: form.category,
         type: expenseType,
       });
+      setForm({
+        amount: '',
+        category: ''
+      })
     } catch (err) {
       console.error(err);
     }

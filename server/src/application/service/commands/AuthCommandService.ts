@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto'
 import { JWT_SECRET } from '../../../../config/config.js';
 import { AppDataSource } from '../../../infrastructure/database/data-source.js';
 import { User } from '../../../domain/entities/User.js';
@@ -89,6 +90,7 @@ export class AuthCommandService {
     const oneHour = 1000 * 60 * 60;
     user.passwordResetExpires = new Date(Date.now() + oneHour);
     await this.userRepository.save(user);
+    
     const resetUrl = `${process.env.FRONTEND_URL}/reset/password/${resetToken}`;
     await this.mailCommandService.forgotPassword(
       { email: user.email },
@@ -98,7 +100,7 @@ export class AuthCommandService {
   }
 
   async resetPassword(token: string, newPassword: string) {
-    const hashedToken = require('crypto')
+    const hashedToken = crypto
       .createHash('sha256')
       .update(token)
       .digest('hex');
