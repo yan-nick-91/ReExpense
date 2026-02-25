@@ -9,6 +9,7 @@ type Props = {
   navigateTo?: string;
   type?: 'button' | 'submit' | 'reset';
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
+  disabled?: boolean;
 };
 
 const themeClasses: Record<NonNullable<Props['theme']>, string> = {
@@ -31,17 +32,24 @@ export default function Button({
   navigateTo,
   type,
   onClick,
+  disabled = false,
 }: Props) {
-  const classes = clsx(
+  const disabledClasses = 'opacity-50 cursor-not-allowed pointer-events-none';
+
+  const baseClasses = clsx(
     'px-4 py-2 rounded-[0.2rem] cursor-pointer border-white-800',
     themeClasses[theme],
+    {
+      [disabledClasses]: disabled,
+      'cursor-point': !disabled,
+    },
     className,
   );
 
   if (navigateTo) {
     return (
       <NavLink
-        className={theme === 'default' ? className : classes}
+        className={theme === 'default' ? className : baseClasses}
         to={`${navigateTo!}`}
       >
         {children}
@@ -51,7 +59,7 @@ export default function Button({
 
   return (
     <button
-      className={theme === 'default' ? className : classes}
+      className={theme === 'default' ? className : baseClasses}
       type={type ?? 'button'}
       onClick={(e) => onClick?.(e)}
     >
