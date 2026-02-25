@@ -1,15 +1,17 @@
-export interface User {
+export type User = {
   id: string;
   email: string;
   password: string;
 }
 
-export interface AuthState {
+export type AuthState = {
   user?: SafeUser;
   isAuthenticated: boolean;
   error?: string;
-  loading: boolean,
-  success: boolean
+  loading: boolean;
+  success: boolean;
+  resetTokenStatus: 'idle' | 'checking' | 'valid' | 'invalid',
+  resetPasswordSuccess: boolean
 }
 
 export type SafeUser = Omit<User, 'password'>;

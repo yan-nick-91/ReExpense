@@ -2,10 +2,8 @@ import { useState, useEffect, type SubmitEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../../../store/store';
 import { resetSuccessPassword } from '../../../store/slice/authSlice';
-import {
-  validationResult,
-  verifyConfirmedPasswordInputField,
-} from '../../../validations/authValidation';
+import { validationResult } from '../../../validations/globalValidation';
+import { verifyConfirmedPasswordInputField } from '../../../validations/authValidation';
 import { updatePasswordController } from '../../../controllers/authController';
 
 import Button from '../../UI/Button';
@@ -31,13 +29,16 @@ export default function SettingsComponent() {
   >(undefined);
 
   useEffect(() => {
+    document.title = 'ReExpense | Settings'
+  })
+
+  useEffect(() => {
     if (!updatePasswordSuccessful) return;
 
     const timer = setTimeout(() => {
       dispatch(resetSuccessPassword());
-
-    }, 3000)
-    return () => clearTimeout(timer)
+    }, 3000);
+    return () => clearTimeout(timer);
   }, [updatePasswordSuccessful, dispatch]);
 
   const submitPasswordUpdater = async (e: SubmitEvent<HTMLFormElement>) => {
@@ -69,7 +70,7 @@ export default function SettingsComponent() {
     if (!isValid) return;
 
     try {
-      await updatePasswordController(dispatch, {
+      updatePasswordController(dispatch, {
         currentPassword,
         newPassword,
       });

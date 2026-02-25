@@ -50,9 +50,8 @@ export const isAuthenticated = createAsyncThunk<
   if (!token) throw rejectWithValue('NO_TOKEN');
 
   try {
-    const res = await axios.post<{ user: SafeUser }>(
+    const res = await axios.get<{ user: SafeUser }>(
       `${API_URL}/auth/authenticated`,
-      {},
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -106,6 +105,35 @@ export const updatePassword = createAsyncThunk<
     }
   },
 );
+
+export const forgotPassword = createAsyncThunk<void, { email: string }>(
+  '/auth/forgot/password',
+  async ({ email }) => {
+    const response = await axios.post(`${API_URL}/auth/forgot/password`, {
+      email,
+    });
+
+    return response.data;
+  },
+);
+
+export const validateResetToken = createAsyncThunk<void, { token: string }>(
+  'auth/reset/password/validate/token',
+  async ({ token }) => {
+    const response = await axios.get(`${API_URL}/auth/reset/password/validate/${token}`);
+    return response.data;
+  },
+);
+
+export const resetForgottenPassword = createAsyncThunk<
+  void,
+  { token: string, newPassword: string }
+>('auth/reset/password', async ({ token, newPassword }) => {
+  const response = await axios.post(`${API_URL}/auth/reset/password/${token}`, {
+    newPassword,
+  });
+  return response.data;
+});
 
 export const logout = createAsyncThunk<void, void, { rejectValue: string }>(
   '/auth/logout',

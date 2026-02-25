@@ -1,16 +1,16 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { Transaction, TransactionType } from '../types/transactionTypes';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { API_URL } from './config';
 
 export const createTransaction = createAsyncThunk<
   Transaction,
-  { currency: number; category: string; type: TransactionType }
->('/transaction/create', async (payload) => {
+  { amount: number; category: string; type: TransactionType }
+>('/transactions/create', async (payload) => {
   const token = sessionStorage.getItem('token');
 
   const res = await axios.post<Transaction>(
-    `${API_URL}/transaction/create`,
+    `${API_URL}/transactions/create`,
     payload,
     {
       headers: {
@@ -25,7 +25,7 @@ export const getAllTransaction = createAsyncThunk<
   Transaction[],
   void,
   { rejectValue: string }
->('/transaction', async (_, { rejectWithValue }) => {
+>('/transactions', async (_, { rejectWithValue }) => {
   const token = sessionStorage.getItem('token');
 
   if (!token) {
@@ -33,14 +33,19 @@ export const getAllTransaction = createAsyncThunk<
   }
 
   try {
-    const res = await axios.get<{userTransactions: Transaction[]}>(`${API_URL}/transaction`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const res = await axios.get<{ userTransactions: Transaction[] }>(
+      `${API_URL}/transactions`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
     return res.data.userTransactions;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (err: any) {
-    return rejectWithValue(err.response.data || 'Failed to get transactions');
+  } catch (err) {
+    const axiosError = err as AxiosError<{ error: string }>;
+    return rejectWithValue(
+      axiosError.response?.data.error || 'Failed to get transactions',
+    );
   }
 });

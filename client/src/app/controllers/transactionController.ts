@@ -5,7 +5,7 @@ import type { TransactionType } from '../types/transactionTypes';
 
 export const createTransactionController = async (
   dispatch: AppDispatch,
-  data: { currency: number; category: string; type: TransactionType },
+  data: { amount: number; category: string; type: TransactionType },
 ) => {
   dispatch(createTransaction(data)).unwrap();
 };

@@ -12,7 +12,10 @@ export default function FormContainer({
   className,
 }: Props) {
   return (
-    <form className={!className ? `p-2 flex flex-col ${className}` : className} onSubmit={onSubmit}>
+    <form
+      className={!className ? `p-2 flex flex-col ${className}` : className}
+      onSubmit={onSubmit}
+    >
       {children}
     </form>
   );

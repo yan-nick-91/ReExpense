@@ -1,112 +1,97 @@
 import { Router } from 'express';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-
-import {
-  type AuthRequest,
-  type SafeUser,
-  type User,
-} from '../../types/authTypes.js';
 import { revokeToken } from '../../infrastructure/token.store.js';
 import { authMiddleware } from '../middleware/auth.middleware.js';
-import { readJSON, writeJSON } from '../../infrastructure/storage.js';
-import { JWT_SECRET } from '../config/config.js';
-import { v4 as uuid } from 'uuid';
+import { AuthCommandService } from '../../application/service/commands/AuthCommandService.js';
+import { AuthQueryService } from './../../application/service/queries/AuthQueryService.js';
+import { type AuthRequest } from '../../types/authTypes.js';
+import type { AuthUserDTO } from '../../application/dto/in/AuthUserDTO.js';
+import type { AuthUpdatePasswordDTO } from './../../application/dto/in/AuthUpdatePasswordDTO.js';
+import type { ResetPasswordRequestDTO } from './../../application/dto/in/ResetPasswordRequestDTO.js';
 
 const router = Router();
-const USERS_FILE = 'users.json';
-
-const loadUsers = (): User[] => readJSON<User[]>(USERS_FILE);
-const saveUsers = (users: User[]) => writeJSON(USERS_FILE, users);
-
-let users = loadUsers();
-let generateId = uuid();
+const authCommandService = new AuthCommandService();
+const authQueryService = new AuthQueryService();
 
 router.post('/register', async (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password)
-    return res.status(400).json({ error: 'Missing email or password' });
-
-  const existing = users.find((u) => u.email === email);
-  if (existing) return res.status(409).json({ error: ' User already exists' });
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const newUser: User = { id: generateId, email, password: hashedPassword };
-  users.push(newUser);
-  saveUsers(users);
-
-  const token = jwt.sign({ id: newUser.id }, JWT_SECRET, {
-    expiresIn: '1h',
-  });
-
-  res.status(201).json({ token });
+  try {
+    const dto: AuthUserDTO = req.body;
+    const result = await authCommandService.register(dto);
+    res.status(201).json(result);
+  } catch (err) {
+    return res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-
-  users = loadUsers();
-  const user = users.find((u) => u.email === email);
-  if (!user) return res.status(401).json({ error: 'Invalid credentials' });
-
-  const isValid = await bcrypt.compare(password, user.password);
-  if (!isValid) return res.status(401).json({ error: 'Invalid credentials' });
-
-  const token = jwt.sign({ id: user.id }, JWT_SECRET, {
-    expiresIn: '1h',
-  });
-
-  res.status(200).json({ token });
+  try {
+    const dto: AuthUserDTO = req.body;
+    const result = await authCommandService.login(dto);
+    return res.status(200).json(result);
+  } catch (err) {
+    return res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
-router.post('/authenticated', authMiddleware, (req: AuthRequest, res) => {
-  res.status(200).json({ user: req.user });
+router.get('/authenticated', authMiddleware, async (req: AuthRequest, res) => {
+  await authQueryService.isAuthenticated(req.user.id);
+  return res.status(200).json({
+    user: req.user,
+  });
 });
 
 router.put(
   '/update/password',
   authMiddleware,
   async (req: AuthRequest, res) => {
-    const { currentPassword, newPassword } = req.body;
-
-    users = loadUsers();
-    const userId = req.user.id;
-    const user = users.find((u) => u.id === userId);
-
-    if (!user)
-      res
-        .status(500)
-        .json({ error: 'Some went wrong during password editing' });
-
-    const currentPasswordIsValid = await bcrypt.compare(
-      currentPassword,
-      user!.password,
-    );
-
-    if (!currentPasswordIsValid) {
-      res.status(401).json({ error: 'Current password is incorrect' });
+    try {
+      const dto: AuthUpdatePasswordDTO = req.body;
+      const userId = req.user.id;
+      const result = await authCommandService.updatePassword(userId, dto);
+      return res.status(201).json({ message: 'Password updated', result });
+    } catch (err) {
+      return res.status(500).json({ error: 'Internal server error' });
     }
-
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    user!.password = hashedPassword;
-    saveUsers(users);
-
-    const newToken = jwt.sign({ id: user!.id }, JWT_SECRET, {
-      expiresIn: '1h',
-    });
-
-    res.status(201).json({ message: 'Password updated', token: newToken });
   },
 );
+
+router.post('/forgot/password', async (req, res) => {
+  try {
+    const dto: ResetPasswordRequestDTO = req.body;
+    const result = await authCommandService.forgotPassword(dto);
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.get('/reset/password/validate/:token', async (req, res) => {
+  const { token } = req.params;
+
+  try {
+    await authQueryService.validateResetPasswordToken(token!)
+    res.status(200).json({ valid: true })
+  } catch (err) {
+    res.status(400).json({ error: 'Token invalid or expired' })
+  }
+})
+
+router.post('/reset/password/:token', async (req, res) => {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+
+  try {
+    await authCommandService.resetPassword(token, newPassword);
+    res.status(200).json({ message: 'Password updated' });
+  } catch (err) {
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
 
 router.delete('/logout', authMiddleware, (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) return res.status(401).json({ error: 'No token provided' });
-
   const token = authHeader.split(' ')[1]!;
   revokeToken(token);
-
   res.status(200).json({ message: 'Logged out successfully' });
 });
 

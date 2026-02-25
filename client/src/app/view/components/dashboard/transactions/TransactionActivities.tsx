@@ -1,9 +1,9 @@
 import { useSelector } from 'react-redux';
-import type { RootState } from '../../../store/store';
+import type { RootState } from '../../../../store/store';
+import clsx from 'clsx';
+import Button from '../../../UI/Button';
 
 export default function TransactionActivities() {
-  //   const dispatch = useDispatch();
-
   const transactions = useSelector(
     (state: RootState) => state.transaction.items,
   );
@@ -15,18 +15,28 @@ export default function TransactionActivities() {
   };
 
   return (
-    <div className='p-4'>
+    <div className='px-4 py-2 mt-3 h-60 overflow-y-scroll'>
       <ul>
         {transactions.map((item) => (
           <li className='mb-2' key={item.id}>
             <div className='flex flex-row gap-2'>
               <p>{convertDateToLocaleDate(item.date)}</p>
               <p className='w-[15%]'>{item.category}</p>
-              <p className='w-[10%]'>
-                {item.type === 'outcome' ? '-' : ''} {item.currency.toFixed(2)}
+              <p
+                className={clsx(
+                  `w-[20%] text-right ${item.type === 'expense' ? 'text-red-500' : 'text-green-600'}`,
+                )}
+              >
+                {item.type === 'expense' ? '-' : '+'} {item.amount.toFixed(2)}
               </p>
+              <Button
+                className='ml-6'
+                theme='primary'
+                navigateTo={`/transactions/${item.id}`}
+              >
+                View transaction
+              </Button>
             </div>
-
             <div className='border border-gray-400' />
           </li>
         ))}
