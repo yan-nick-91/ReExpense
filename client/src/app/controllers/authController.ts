@@ -46,7 +46,7 @@ export const validateResetTokenController = (
 
 export const resetForgottenPasswordController = (
   dispatch: AppDispatch,
-  data: { newPassword: string },
+  data: { token: string, newPassword: string },
 ) => {
   dispatch(resetForgottenPassword(data));
 };
