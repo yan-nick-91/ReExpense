@@ -64,6 +64,17 @@ router.post('/forgot/password', async (req, res) => {
   }
 });
 
+router.get('/reset/password/validate/:token', async (req, res) => {
+  const { token } = req.params;
+
+  try {
+    await authQueryService.validateResetPasswordToken(token!)
+    res.status(200).json({ valid: true })
+  } catch (err) {
+    res.status(400).json({ error: 'Token invalid or expired' })
+  }
+})
+
 router.post('/reset/password/:token', async (req, res) => {
   const { token } = req.params;
   const { newPassword } = req.body;
