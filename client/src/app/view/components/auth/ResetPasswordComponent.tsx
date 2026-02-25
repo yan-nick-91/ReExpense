@@ -1,14 +1,16 @@
 import { useEffect, useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { validationResult } from '../../../validations/globalValidation';
 import { verifyConfirmedPasswordInputField } from '../../../validations/authValidation';
-import { resetForgottenPasswordController } from '../../../controllers/authController';
-import { useDispatch } from 'react-redux';
+import {
+  resetForgottenPasswordController,
+  validateResetTokenController,
+} from '../../../controllers/authController';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Button from '../../UI/Button';
 import FormContainer from '../../UI/FormContainer';
-import { useParams } from 'react-router-dom';
-
-type TokenStatus = 'checking' | 'valid' | 'invalid';
+import { useNavigate, useParams } from 'react-router-dom';
+import type { RootState } from '../../../store/store';
 
 type FormState = {
   newPassword: string;
@@ -22,7 +24,12 @@ type ErrorState = {
 
 export default function ResetPasswordComponent() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { token } = useParams();
+
+  const { resetTokenStatus, resetPasswordSuccess, loading } = useSelector(
+    (state: RootState) => state.auth,
+  );
 
   const [form, setForm] = useState<FormState>({
     newPassword: '',
@@ -30,20 +37,16 @@ export default function ResetPasswordComponent() {
   });
 
   const [errors, setErrors] = useState<ErrorState>({});
-  const [isTokenValid, setIsTokenValid] = useState<TokenStatus>('checking');
+  const [passwordSuccess, setPasswordSuccess] = useState('');
 
   useEffect(() => {
-    document.title = 'ReExpense | Reset Password'
-  })
+    document.title = 'ReExpense | Reset Password';
+  });
 
   useEffect(() => {
-    const validate = () => {
-      if (!token) {
-        setIsTokenValid('invalid');
-        return;
-      }
-    };
-  }, [token]);
+    if (!token) return;
+    validateResetTokenController(dispatch, { token });
+  }, [token, dispatch]);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -76,16 +79,52 @@ export default function ResetPasswordComponent() {
 
     const isValid = passwordResult.valid && !confirmedPasswordResult.error;
 
-    if (!isValid) return;
+    if (!isValid || !token) return;
 
     try {
       resetForgottenPasswordController(dispatch, {
+        token,
         newPassword: form.newPassword,
       });
+      if (resetPasswordSuccess) {
+        setTimeout(() => {
+          setPasswordSuccess('Updating password succeeded');
+          navigate('/login');
+        }, 3000);
+      }
     } catch (err) {
       console.error(err);
     }
   };
+
+  if (resetTokenStatus === 'checking') {
+    return (
+      <div className='flex items-center justify-center h-screen'>
+        <p>Validating reset link...</p>
+      </div>
+    );
+  }
+
+  if (resetTokenStatus === 'invalid') {
+    return (
+      <div className='flex items-center justify-center h-screen'>
+        <div className='border border-gray-600 w-[80%] rounded-[0.2rem]'>
+          <div className='bg-[#090979] text-white p-2 pl-2 text-[1.2rem]'>
+            <h1>Error</h1>
+          </div>
+          <div className='p-4'>
+            <p className='mb-2'>Reset link is invalid or expired.</p>
+            <p className='mb-4'>
+              Please request a new password reset by clicking the button below.
+            </p>
+            <Button navigateTo='/forgot/password' theme='primary'>
+              Request reset
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='flex items-center justify-center h-screen'>
@@ -128,7 +167,17 @@ export default function ResetPasswordComponent() {
               {errors.confirmedPassword}
             </p>
           )}
-          <Button className='mt-4 md:w-[15%]' theme='primary' type={'submit'}>
+          {passwordSuccess && (
+            <p className='text-green-600' mb-4>
+              {passwordSuccess}
+            </p>
+          )}
+          <Button
+            className='mt-4 md:w-[15%]'
+            theme='primary'
+            type={'submit'}
+            disabled={loading}
+          >
             Submit request
           </Button>
         </FormContainer>
