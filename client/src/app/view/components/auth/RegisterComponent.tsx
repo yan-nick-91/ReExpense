@@ -97,7 +97,7 @@ export default function RegisterComponent() {
     <div className='flex items-center justify-center h-screen'>
       <div className='border border-gray-600 w-[80%] rounded-[0.2rem]'>
         <div className='bg-[#090979] text-white p-2 pl-2 text-[1.2rem]'>
-          <h1>Register</h1>
+          <h1 id='main-content'>Register</h1>
         </div>
         <AuthContainer onSubmit={handleSubmit}>
           <label htmlFor='email'>Email</label>
