@@ -37,7 +37,6 @@ export default function ResetPasswordComponent() {
   });
 
   const [errors, setErrors] = useState<ErrorState>({});
-  const [passwordSuccess, setPasswordSuccess] = useState('');
 
   useEffect(() => {
     document.title = 'ReExpense | Reset Password';
@@ -47,6 +46,15 @@ export default function ResetPasswordComponent() {
     if (!token) return;
     validateResetTokenController(dispatch, { token });
   }, [token, dispatch]);
+
+  useEffect(() => {
+    if (!resetPasswordSuccess) return;
+
+    const timer = setTimeout(() => {
+      navigate('/login');
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [resetPasswordSuccess, navigate]);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -72,7 +80,7 @@ export default function ResetPasswordComponent() {
 
     const newErrors = {
       newPassword: passwordResult.error,
-      confirmedPasswordResult: confirmedPasswordResult.error,
+      confirmedPassword: confirmedPasswordResult.error,
     };
 
     setErrors(newErrors);
@@ -86,12 +94,6 @@ export default function ResetPasswordComponent() {
         token,
         newPassword: form.newPassword,
       });
-      if (resetPasswordSuccess) {
-        setTimeout(() => {
-          setPasswordSuccess('Updating password succeeded');
-          navigate('/login');
-        }, 3000);
-      }
     } catch (err) {
       console.error(err);
     }
@@ -141,8 +143,8 @@ export default function ResetPasswordComponent() {
             value={form.newPassword}
             onChange={onChange}
             className='border rounded-[.2rem] mt-1 border-gray-600 p-2'
-            autoComplete='email'
-            aria-invalid={!!errors}
+            autoComplete='none'
+            aria-invalid={!!errors.newPassword}
           />
           {errors.newPassword && (
             <p className='text-red-600 text-sm' role='alert'>
@@ -154,22 +156,22 @@ export default function ResetPasswordComponent() {
           </label>
           <input
             id='confirmPassword'
-            name='confirmPassword'
+            name='confirmedPassword'
             type='password'
             value={form.confirmedPassword}
             onChange={onChange}
             className='border rounded-[.2rem] mt-1 border-gray-600 p-2'
-            autoComplete='email'
-            aria-invalid={!!errors}
+            autoComplete='none'
+            aria-invalid={!!errors.confirmedPassword}
           />
           {errors.confirmedPassword && (
             <p className='text-red-600 text-sm' role='alert'>
               {errors.confirmedPassword}
             </p>
           )}
-          {passwordSuccess && (
+          {resetPasswordSuccess && (
             <p className='text-green-600' mb-4>
-              {passwordSuccess}
+              Password successfully updated. Redirecting to login...
             </p>
           )}
           <Button
