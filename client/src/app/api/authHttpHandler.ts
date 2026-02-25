@@ -118,18 +118,18 @@ export const forgotPassword = createAsyncThunk<void, { email: string }>(
 );
 
 export const validateResetToken = createAsyncThunk<void, { token: string }>(
-  'auth/reset/token/validate',
+  'auth/reset/password/validate/token',
   async ({ token }) => {
-    const response = await axios.get(`${API_URL}/auth/reset/validate/${token}`);
+    const response = await axios.get(`${API_URL}/auth/reset/password/validate/${token}`);
     return response.data;
   },
 );
 
 export const resetForgottenPassword = createAsyncThunk<
   void,
-  { newPassword: string }
->('auth/reset/password', async ({ newPassword }) => {
-  const response = await axios.post(`${API_URL}/auth/reset/password`, {
+  { token: string, newPassword: string }
+>('auth/reset/password', async ({ token, newPassword }) => {
+  const response = await axios.post(`${API_URL}/auth/reset/password/${token}`, {
     newPassword,
   });
   return response.data;
