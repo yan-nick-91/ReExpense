@@ -10,6 +10,8 @@ export type AuthState = {
   error?: string;
   loading: boolean;
   success: boolean;
+  resetTokenStatus: 'idle' | 'checking' | 'valid' | 'invalid',
+  resetPasswordSuccess: boolean
 }
 
 export type SafeUser = Omit<User, 'password'>;
