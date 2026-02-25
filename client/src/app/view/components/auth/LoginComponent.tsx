@@ -83,7 +83,7 @@ export default function LoginComponent() {
     <div className='flex items-center justify-center h-screen'>
       <div className='border border-gray-600 w-[80%] rounded-[0.2rem]'>
         <div className='bg-[#090979] text-white p-2 pl-2 text-[1.2rem]'>
-          <h1>Login</h1>
+          <h1 id='main-content'>Login</h1>
         </div>
         <AuthContainer onSubmit={handleSubmit}>
           <label htmlFor='email'>Email</label>
@@ -120,13 +120,13 @@ export default function LoginComponent() {
               {errors.password}
             </p>
           )}
-          <Button className='mt-4 w-[12%]' theme='primary' type={'submit'}>
+          <Button className='mt-4 md:w-[15%]' theme='primary' type={'submit'}>
             Login
           </Button>
         </AuthContainer>
         <div className='my-6 pl-2'>
           <p>
-            Already having an account? Navigate to{' '}
+            Not having an account yet? Navigate to{' '}
             <NavLink
               to={`/register`}
               className={'underline underline-offset-5'}

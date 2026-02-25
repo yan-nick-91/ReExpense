@@ -12,12 +12,16 @@ type Props = {
 };
 
 const themeClasses: Record<NonNullable<Props['theme']>, string> = {
-  primary: 'bg-[#090979] text-white hover:bg-[#2424ba] active:scale-95',
-  info: 'bg-[#196090] text-white hover:bg-[#367dac] active:scale-95',
-  success: 'bg-[#075b35] text-white hover:bg-[#067b47] active:scale-95',
-  danger: 'bg-[#6b0508] text-white hover:bg-[#aa0e14] active:scale-95',
-  warning: 'bg-[#d8ae22] text-black hover:bg-[#d8a122] active:scale-95',
-  default: '',
+  primary:
+    'bg-[#090979] text-white hover:bg-[#2424ba] active:scale-95 focus:outline-offset-2 focus:outline-[#2424ba] focus:bg[#2424ba]',
+  info: 'bg-[#196090] text-white hover:bg-[#367dac] active:scale-95 focus:outline-offset-2 focus:outline-[#367dac] focus:bg-[#367dac]',
+  success:
+    'bg-[#075b35] text-white hover:bg-[#067b47] active:scale-95 focus:outline-offset-2 focus:outline-[#067b47] focus:bg-[#067b47]',
+  danger:
+    'bg-[#6b0508] text-white hover:bg-[#aa0e14] active:scale-95 focus:outline-offset-2 focus:outline-[#aa0e14] focus:bg-[#aa0e14]',
+  warning:
+    'bg-[#d8ae22] text-black hover:bg-[#d8a122] active:scale-95 focus:outline-offset-2 focus:outline-[#d8a122] focus:bg-[#d8a122]',
+  default: 'focus:border focus:border-gray-600',
 };
 
 export default function Button({
@@ -29,7 +33,7 @@ export default function Button({
   onClick,
 }: Props) {
   const classes = clsx(
-    'px-4 py-2 rounded-[0.2rem] cursor-pointer',
+    'px-4 py-2 rounded-[0.2rem] cursor-pointer border-white-800',
     themeClasses[theme],
     className,
   );
