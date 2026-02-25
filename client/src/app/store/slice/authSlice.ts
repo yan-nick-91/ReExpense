@@ -6,6 +6,8 @@ import {
   isAuthenticated,
   updatePassword,
   logout,
+  validateResetToken,
+  resetForgottenPassword,
 } from '../../api/authHttpHandler';
 
 const initialState: AuthState = {
@@ -14,6 +16,8 @@ const initialState: AuthState = {
   error: undefined,
   loading: true,
   success: false,
+  resetTokenStatus: 'idle',
+  resetPasswordSuccess: false,
 };
 
 const authSlice = createSlice({
@@ -74,6 +78,29 @@ const authSlice = createSlice({
         state.loading = false;
         state.success = false;
         state.error = action.error.message;
+      })
+      .addCase(validateResetToken.pending, (state) => {
+        state.resetTokenStatus = 'checking';
+      })
+      .addCase(validateResetToken.fulfilled, (state) => {
+        state.resetTokenStatus = 'valid';
+      })
+      .addCase(validateResetToken.rejected, (state) => {
+        state.resetTokenStatus = 'invalid';
+      })
+      .addCase(resetForgottenPassword.pending, (state) => {
+        state.loading = true;
+        state.resetPasswordSuccess = false;
+        state.error = undefined;
+      })
+      .addCase(resetForgottenPassword.fulfilled, (state) => {
+        state.loading = false;
+        state.resetPasswordSuccess = true;
+      })
+      .addCase(resetForgottenPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.resetPasswordSuccess = false;
+        state.error = action.error.message
       })
       .addCase(logout.fulfilled, (state) => {
         state.isAuthenticated = false;
