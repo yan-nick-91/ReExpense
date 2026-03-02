@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { AppDataSource } from '../../../infrastructure/database/data-source.js';
 import { User } from '../../../domain/entities/User.js';
-import type { UserResponseDTO } from '../../dto/out/UserResponseResponse.js';
+import type { UserResponseDTO } from '../../dto/out/UserResponse.js';
 import { verifyFoundUser } from '../../../domain/business/validations.js';
 
 export class AuthQueryService {
