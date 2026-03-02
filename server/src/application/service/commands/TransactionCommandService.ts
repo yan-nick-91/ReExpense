@@ -39,7 +39,7 @@ export class TransactionCommandService {
     return {
       id: savedTransaction.id,
       userId: savedTransaction.user.id,
-      amount: +savedTransaction.amount,
+      amount: savedTransaction.amount,
       category: savedTransaction.category,
       type: savedTransaction.type,
       date: savedTransaction.date,
