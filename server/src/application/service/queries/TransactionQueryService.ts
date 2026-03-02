@@ -7,7 +7,7 @@ export class TransactionQueryService {
 
   async getAllTransactionByUserId(
     userId: string,
-  ): Promise<TransactionResponseDTO[]> {
+  ): Promise<TransactionResponseDTO[] | []> {
     const transactions: Transaction[] = await this.transactionRepository.find({
       where: { user: { id: userId } },
       relations: ['user']
@@ -16,7 +16,7 @@ export class TransactionQueryService {
     return transactions.map((t) => ({
       id: t.id,
       userId: t.user.id,
-      amount: +t.amount,
+      amount: t.amount,
       category: t.category,
       type: t.type,
       date: t.date,
