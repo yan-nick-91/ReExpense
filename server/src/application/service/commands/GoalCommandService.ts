@@ -53,8 +53,6 @@ export class GoalCommandService {
     goal.description = dto.description;
     goal.savings = dto.savings;
     goal.updatedAt = currentTime;
-    console.log(goal.id)
-    console.log(goal.user.id)
 
     const savedGoal = await this.goalRepository.save(goal);
     return updateToGoalResponseDTO(savedGoal);
