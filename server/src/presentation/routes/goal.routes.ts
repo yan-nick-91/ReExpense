@@ -30,7 +30,7 @@ router.get('/', authMiddleware, async (req: AuthRequest, res) => {
   }
 });
 
-router.put('/update/:goalId', authMiddleware, async (req: AuthRequest, res) => {
+router.put('/:goalId', authMiddleware, async (req: AuthRequest, res) => {
   try {
     const goalId = req.params.goalId as string
     const userId = req.user!.id;
@@ -41,5 +41,16 @@ router.put('/update/:goalId', authMiddleware, async (req: AuthRequest, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+router.delete('/:goalId', authMiddleware, async (req: AuthRequest, res) => {
+  try {
+    const goalId = req.params.goalId as string;
+    const userId = req.user!.id;
+    await goalCommandService.delete(userId, goalId)
+    res.status(204).json({ message: 'Goal successfully deleted'})
+  } catch (err) {
+    res.status(500).json({ error: 'Internal server error'})
+  }
+})
 
 export default router;
