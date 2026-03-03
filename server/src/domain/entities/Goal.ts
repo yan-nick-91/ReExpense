@@ -23,7 +23,7 @@ export class Goal {
   description!: string;
 
   @Column('decimal', { precision: 12, scale: 2 })
-  savings!: number;
+  price!: number;
 
   @Column({
     type: 'datetime',
