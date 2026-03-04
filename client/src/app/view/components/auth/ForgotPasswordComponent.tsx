@@ -1,5 +1,5 @@
 import { useEffect, useState, type ChangeEvent, type SubmitEvent } from 'react';
-import { validationResult } from '../../../validations/globalValidation';
+import { validationStringResult } from '../../../validations/globalValidation';
 import { forgotPasswordController } from '../../../controllers/authController';
 import { useDispatch } from 'react-redux';
 
@@ -23,7 +23,7 @@ export default function ForgotPasswordComponent() {
   const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const emailResult = validationResult(email, 'Email is required');
+    const emailResult = validationStringResult(email, 'Email is required');
     const newError = emailResult.error!;
 
     setError(newError);

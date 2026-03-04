@@ -1,5 +1,5 @@
 import { useEffect, useState, type ChangeEvent, type SubmitEvent } from 'react';
-import { validationResult } from '../../../validations/globalValidation';
+import { validationStringResult } from '../../../validations/globalValidation';
 import { verifyConfirmedPasswordInputField } from '../../../validations/authValidation';
 import {
   resetForgottenPasswordController,
@@ -68,7 +68,7 @@ export default function ResetPasswordComponent() {
   const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const passwordResult = validationResult(
+    const passwordResult = validationStringResult(
       form.newPassword,
       'Password is required',
     );
