@@ -1,24 +1,16 @@
-export type CreatedGoal = {
+export type Goal = {
   title: string;
   description: string;
   price: number;
 };
 
-export type UpdatedGoal = {
-  id: string;
-  userId: string;
-  title: string;
-  description: string;
-  price: number;
-  updatedAt: string;
-};
+export type UpdateGoal = Goal & {
+  id: string
+}
 
-export type GoalGeneral = {
+export type GoalGeneral = Goal & {
   id: string;
   userId: string;
-  title: string;
-  description: string;
-  price: number;
   createdAt: string;
   updatedAt?: string;
 };
