@@ -2,7 +2,7 @@ import { useState, useEffect, type SubmitEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../../../store/store';
 import { resetSuccessPassword } from '../../../store/slice/authSlice';
-import { validationResult } from '../../../validations/globalValidation';
+import { validationStringResult } from '../../../validations/globalValidation';
 import { verifyConfirmedPasswordInputField } from '../../../validations/authValidation';
 import { updatePasswordController } from '../../../controllers/authController';
 
@@ -44,11 +44,11 @@ export default function SettingsComponent() {
   const submitPasswordUpdater = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const currentPasswordResult = validationResult(
+    const currentPasswordResult = validationStringResult(
       currentPassword,
       'Current password is required',
     );
-    const newPasswordResult = validationResult(
+    const newPasswordResult = validationStringResult(
       newPassword,
       'New password is required',
     );

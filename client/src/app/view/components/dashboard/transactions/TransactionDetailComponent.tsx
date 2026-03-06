@@ -1,7 +1,7 @@
-import { useDispatch, useSelector } from 'react-redux';
-import type { RootState } from '../../../../store/store';
-import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import type { RootState } from '../../../../store/store';
 import { getAllTransactionController } from '../../../../controllers/transactionController';
 
 export default function TransactionDetailComponent() {
@@ -11,7 +11,6 @@ export default function TransactionDetailComponent() {
   const transaction = useSelector((state: RootState) =>
     state.transaction.items.find((t) => t.id === transactionId),
   );
-
   useEffect(() => {
     if (!transaction) {
       getAllTransactionController(dispatch);

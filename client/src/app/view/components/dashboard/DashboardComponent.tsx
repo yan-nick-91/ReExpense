@@ -6,7 +6,7 @@ import TransactionComponent from './transactions/TransactionComponent';
 import ChartComponent from './charts/ChartComponent';
 import TransactionFormModal from './transactions/TransactionFormModal';
 import TransactionActivities from './transactions/TransactionActivities';
-import GoalsComponent from './goals/GoalsComponent';
+import GoalComponent from './goals/GoalComponent';
 import GoalFormModal from './goals/GoalFormModal';
 
 type ExpenseModalType = 'income' | 'expense';
@@ -78,7 +78,7 @@ export default function DashboardComponent() {
           <div className='bg-[#090979] text-white p-1 pl-2 text-[1.2rem] h-10'>
             <h2 id='goals-heading'>Goals</h2>
           </div>
-          <GoalsComponent onOpenGoalModal={openGoalModal} />
+          <GoalComponent onOpenGoalModal={openGoalModal} />
         </section>
         <section
           id='activities-section'

@@ -19,7 +19,7 @@ const themeClasses: Record<NonNullable<Props['theme']>, string> = {
   success:
     'bg-[#075b35] text-white hover:bg-[#067b47] active:scale-95 focus:outline-offset-2 focus:outline-[#067b47] focus:bg-[#067b47]',
   danger:
-    'bg-[#6b0508] text-white hover:bg-[#aa0e14] active:scale-95 focus:outline-offset-2 focus:outline-[#aa0e14] focus:bg-[#aa0e14]',
+    'bg-[#98070c] text-white hover:bg-[#aa0e14] active:scale-95 focus:outline-offset-2 focus:outline-[#aa0e14] focus:bg-[#aa0e14]',
   warning:
     'bg-[#d8ae22] text-black hover:bg-[#d8a122] active:scale-95 focus:outline-offset-2 focus:outline-[#d8a122] focus:bg-[#d8a122]',
   default: 'focus:border focus:border-gray-600',

@@ -17,7 +17,7 @@ export class GoalCommandService {
       throw new Error('Title is required');
     }
 
-    if (dto.savings === 0.0) {
+    if (dto.price === 0.0) {
       throw new Error('Savings should be higher than 0.0');
     }
 
@@ -26,7 +26,7 @@ export class GoalCommandService {
       user: { id: userId },
       title: dto.title,
       description: dto.description,
-      savings: dto.savings,
+      price: dto.price,
       createdAt: currentTime,
     });
 
@@ -39,7 +39,6 @@ export class GoalCommandService {
     goalId: string,
     dto: GoalDTO,
   ): Promise<GoalResponseDTO> {
-    console.log(userId)
     const goal = await this.goalRepository.findOne({
       where: { id: goalId, user: { id: userId } },
       relations: ['user'],
@@ -51,10 +50,19 @@ export class GoalCommandService {
 
     goal.title = dto.title;
     goal.description = dto.description;
-    goal.savings = dto.savings;
+    goal.price = dto.price;
     goal.updatedAt = currentTime;
 
     const savedGoal = await this.goalRepository.save(goal);
     return updateToGoalResponseDTO(savedGoal);
+  }
+
+  async delete(userId: string, goalId: string): Promise<void> {
+    const result = await this.goalRepository.delete({
+      id: goalId,
+      user: { id: userId },
+    });
+
+    if (result.affected === 0) throw new NotFoundException('Goal not found');
   }
 }
