@@ -30,7 +30,7 @@ router.get('/', authMiddleware, async (req: AuthRequest, res) => {
   }
 });
 
-router.put('/:goalId', authMiddleware, async (req: AuthRequest, res) => {
+router.put('/update/:goalId', authMiddleware, async (req: AuthRequest, res) => {
   try {
     const goalId = req.params.goalId as string
     const userId = req.user!.id;
@@ -42,7 +42,7 @@ router.put('/:goalId', authMiddleware, async (req: AuthRequest, res) => {
   }
 });
 
-router.delete('/:goalId', authMiddleware, async (req: AuthRequest, res) => {
+router.delete('/delete/:goalId', authMiddleware, async (req: AuthRequest, res) => {
   try {
     const goalId = req.params.goalId as string;
     const userId = req.user!.id;

@@ -11,7 +11,12 @@ export const convertToDateAndTimeDisplay = (isoDate: string) => {
   const month = date.toLocaleString('en-GB', { month: 'long' });
   const year = date.getFullYear();
 
-  const time = isoDate.split('T')[1].split('.')[0];
-
+  const time = date.toLocaleTimeString('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  })
+  
   return `${day} ${month} ${year}, ${time}`;
 };
