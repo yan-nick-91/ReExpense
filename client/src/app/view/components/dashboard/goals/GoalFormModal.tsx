@@ -122,7 +122,7 @@ export default function GoalFormModal({
       console.error(err);
     }
   };
-  
+
   return (
     <section
       className={clsx(
@@ -134,7 +134,7 @@ export default function GoalFormModal({
         onSubmit={submitGoalHandler}
       >
         <h2 className='text-xl font-bold mb-4'>
-          {modalPurpose === 'create' ? 'Add new goal' : 'Update goal'}
+          {modalPurpose === 'create' ? 'Add new goal' : 'Edit goal'}
         </h2>
         <div className='mb-8'>
           <div className='flex flex-col mb-4'>
@@ -198,10 +198,10 @@ export default function GoalFormModal({
         </div>
         <div className='flex gap-4'>
           <Button theme='primary' type='submit'>
-            Submit Transaction
+            {modalPurpose === 'create' ? 'Submit new goal' : 'Edit goal'}
           </Button>
           <Button theme='primary' onClick={onClose}>
-            Close Form
+            Close form
           </Button>
         </div>
       </form>
