@@ -19,13 +19,9 @@ export default function GoalItem({ goal }: Props) {
     <div className='mb-8'>
       {rowDisplay('ID', goal.id)}
       {rowDisplay('Description', `${goal.description || 'No details'}`)}
-      {goal.createdAt && (
-        <>
-          {rowDisplay(
-            'Created at',
-            `${convertToDateAndTimeDisplay(goal.createdAt)}`,
-          )}
-        </>
+      {rowDisplay(
+        'Created at',
+        `${convertToDateAndTimeDisplay(goal.createdAt)}`,
       )}
       {goal.updatedAt && (
         <>
