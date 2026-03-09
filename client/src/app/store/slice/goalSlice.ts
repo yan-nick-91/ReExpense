@@ -65,7 +65,11 @@ const goalSlice = createSlice({
         );
 
         if (index !== -1) {
-          state.items[index] = action.payload;
+          state.items[index] = {
+            ...state.items[index],
+            ...action.payload,
+            createdAt: state.items[index].createdAt
+          }
         }
       })
       .addCase(updateGoal.rejected, (state, action) => {
