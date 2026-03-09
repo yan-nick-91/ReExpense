@@ -2,17 +2,12 @@ import { useSelector } from 'react-redux';
 import type { RootState } from '../../../../store/store';
 import clsx from 'clsx';
 import Button from '../../../UI/Button';
+import { convertDateToLocaleDate } from '../../../../utils/globalFunctions';
 
 export default function TransactionActivities() {
   const transactions = useSelector(
     (state: RootState) => state.transaction.items,
   );
-
-  const convertDateToLocaleDate = (date: string): string => {
-    const isoDate = new Date(date);
-    const localeDate = isoDate.toLocaleDateString('en-GB');
-    return localeDate;
-  };
 
   return (
     <div className='px-4 py-2 mt-3 h-60 overflow-y-scroll'>

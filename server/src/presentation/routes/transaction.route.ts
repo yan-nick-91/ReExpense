@@ -11,12 +11,12 @@ const transactionQueryService = new TransactionQueryService();
 
 router.post('/create', authMiddleware, async (req: AuthRequest, res) => {
   const dto: CreateTransactionDTO = req.body;
-  const result = await transactionCommandService.create(req.user.id, dto);
+  const result = await transactionCommandService.create(req.user!.id, dto);
   res.status(201).json(result);
 });
 
 router.get("/", authMiddleware, async (req: AuthRequest, res) => {
-  const userId = req.user.id;
+  const userId = req.user!.id;
   const result =
     await transactionQueryService.getAllTransactionByUserId(userId);
 

@@ -5,7 +5,7 @@ import { registerController } from '../../../controllers/authController';
 
 import AuthContainer from '../../UI/FormContainer';
 import Button from '../../UI/Button';
-import { validationResult } from '../../../validations/globalValidation';
+import { validationStringResult } from '../../../validations/globalValidation';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { verifyConfirmedPasswordInputField } from '../../../validations/authValidation';
 
@@ -59,8 +59,8 @@ export default function RegisterComponent() {
 
     console.log('clicked');
 
-    const emailResult = validationResult(form.email, 'Email is required');
-    const passwordResult = validationResult(
+    const emailResult = validationStringResult(form.email, 'Email is required');
+    const passwordResult = validationStringResult(
       form.password,
       'Password is required',
     );

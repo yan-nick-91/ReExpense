@@ -33,7 +33,7 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/authenticated', authMiddleware, async (req: AuthRequest, res) => {
-  await authQueryService.isAuthenticated(req.user.id);
+  await authQueryService.isAuthenticated(req.user!.id);
   return res.status(200).json({
     user: req.user,
   });
@@ -45,7 +45,7 @@ router.put(
   async (req: AuthRequest, res) => {
     try {
       const dto: AuthUpdatePasswordDTO = req.body;
-      const userId = req.user.id;
+      const userId = req.user!.id;
       const result = await authCommandService.updatePassword(userId, dto);
       return res.status(201).json({ message: 'Password updated', result });
     } catch (err) {

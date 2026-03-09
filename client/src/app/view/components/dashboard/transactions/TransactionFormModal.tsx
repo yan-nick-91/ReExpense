@@ -1,7 +1,7 @@
 import { useEffect, useState, type ChangeEvent, type SubmitEvent } from 'react';
 import Button from '../../../UI/Button';
 import TransactionInputComponent from './TransactionInputComponent';
-import { validationResult } from '../../../../validations/globalValidation';
+import { validationAboveZeroResult, validationStringResult } from '../../../../validations/globalValidation';
 import clsx from 'clsx';
 import { createTransactionController } from '../../../../controllers/transactionController';
 import { useDispatch, useSelector } from 'react-redux';
@@ -59,11 +59,11 @@ export default function ExpenseFormModal({ expenseType, onClose }: Props) {
   const submitExpenseHandler = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const amountResult = validationResult(
+    const amountResult = validationAboveZeroResult(
       form.amount,
       'Amount for currency is required',
     );
-    const categoryResult = validationResult(
+    const categoryResult = validationStringResult(
       form.category,
       'Category is required',
     );

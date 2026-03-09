@@ -12,5 +12,5 @@ export interface SafeUser {
 }
 
 export interface AuthRequest extends Request {
-  user?: any;
+  user?: User;
 }

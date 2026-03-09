@@ -9,6 +9,7 @@ import SettingsPage from '../view/pages/SettingsPage';
 import TransactionDetailPage from '../view/pages/TransactionDetailPage';
 import ForgotPasswordPage from '../view/pages/ForgotPasswordPage';
 import ResetPasswordPage from '../view/pages/ResetPasswordPage';
+import GoalDetailPage from '../view/pages/GoalDetailPage';
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
             path: '/transactions/:transactionId',
             element: <TransactionDetailPage />,
           },
+          {
+            path: '/goals/:goalId',
+            element: <GoalDetailPage />
+          }
         ],
       },
     ],
