@@ -1,6 +1,6 @@
 import type { Response, NextFunction } from 'express';
 import jwt, { type JwtPayload } from 'jsonwebtoken';
-import { JWT_SECRET } from '../../../config/config.js';
+import { JWT_SECRET } from '../../config/config.js';
 
 import type { AuthRequest } from '../../types/authTypes.js';
 import { isTokenRevoked } from '../../infrastructure/token.store.js';
