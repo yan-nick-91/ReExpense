@@ -82,7 +82,7 @@ export default function SettingsComponent() {
   return (
     <>
       <section className='flex justify-center h-screen'>
-        <h1 className='sr-only'>Setting form</h1>
+        <h1 id='main-content' className='sr-only'>Setting form</h1>
         <div className='border border-gray-600 w-[80%]'>
           <form
             className='text-[1.2rem] w-[95%] m-auto'
