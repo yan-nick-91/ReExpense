@@ -29,19 +29,29 @@ A simple fullstack application that allows the user to track their income and ex
 
 ## How to use
 
-Clone this project by using `git clone <alias>`, to get the latest version of the main branch.
+Clone this project by using `git clone <url of this project>`, to get the latest version of the main branch.
 
 After cloning this project, use the command `npm install` or in shorthand `npm i`, in order to install all the required packages to run the application.
 
+NOTE:
+
+Make sure that you are in the project folder for npm install to work.
+Simply use the following commands below:
+
+- client: ```cd client```
+- server: ```cd server```
+
+## Env
+
 Both the client and server sides are using env variables according to the examples below.
 
-## client
+### client
 
 ```env
 VITE_SERVER_URL='url to the backend'
 ```
 
-## server
+### server
 
 ```env
 PORT= 'Port of the server'
