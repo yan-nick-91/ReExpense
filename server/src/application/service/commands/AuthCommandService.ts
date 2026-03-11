@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto'
-import { JWT_SECRET } from '../../../../config/config.js';
+import { JWT_SECRET } from '../../../config/config.js';
 import { AppDataSource } from '../../../infrastructure/database/data-source.js';
 import { User } from '../../../domain/entities/User.js';
 import { MailCommandService } from './MailCommandService.js';
