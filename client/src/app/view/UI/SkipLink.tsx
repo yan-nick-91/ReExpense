@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useSkipLinks } from '../../hook/skipLinkHooks';
+import { useSkipLinks } from '../../hooks/skipLinkHooks';
 import type { SkipLinkItem } from '../../context/SkipLinkContext';
 
 const BASE_LINKS = [{ href: '#main-content', label: 'Go to main content' }];
