@@ -1,38 +1,12 @@
 import clsx from 'clsx';
-import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
-import type { RootState } from '../../store/store';
+import { useSkipLinks } from '../../hook/skipLinkHooks';
+import type { SkipLinkItem } from '../../context/SkipLinkContext';
+
+const BASE_LINKS = [{ href: '#main-content', label: 'Go to main content' }];
 
 export default function SkipLink() {
-  const location = useLocation();
-  const isLoggedIn = useSelector(
-    (state: RootState) => state.auth.isAuthenticated,
-  );
-
-  const links = [
-    {
-      href: '#main-content',
-      label: 'Go to main content',
-    },
-  ];
-
-  if (isLoggedIn && location.pathname === '/') {
-    links.push(
-      {
-        href: '#chart-section',
-        label: 'Go to chart diagrams',
-      },
-      {
-        href: '#transaction-section',
-        label: 'Go to transactions',
-      },
-      { href: '#goals-section', label: 'Go to goals' },
-      {
-        href: '#activities-section',
-        label: 'Go to activities',
-      },
-    );
-  }
+  const { pageLinks } = useSkipLinks();
+  const links: SkipLinkItem[] = [...BASE_LINKS, ...pageLinks];
 
   return (
     <>
