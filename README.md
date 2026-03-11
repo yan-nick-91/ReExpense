@@ -1,7 +1,6 @@
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/EltonC06/Event-Planner/blob/main/LICENSE)
-
-
 # ReExpense
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/EltonC06/Event-Planner/blob/main/LICENSE)
 
 ## Description
 
