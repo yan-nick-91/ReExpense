@@ -8,6 +8,7 @@ import TransactionFormModal from './transactions/TransactionFormModal';
 import TransactionActivities from './transactions/TransactionActivities';
 import GoalComponent from './goals/GoalComponent';
 import GoalFormModal from './goals/GoalFormModal';
+import { useRegisterSkipLinks } from '../../../hook/skipLinkHooks';
 
 type ExpenseModalType = 'income' | 'expense';
 
@@ -25,6 +26,13 @@ export default function DashboardComponent() {
   useState(() => {
     document.title = 'ReExpense | Dashboard';
   });
+
+  useRegisterSkipLinks('dashboard', [
+    { href: '#chart-section', label: 'Go to chart diagrams' },
+    { href: '#transaction-section', label: 'Go to transactions' },
+    { href: '#goals-section', label: 'Go to goals' },
+    { href: '#activities-section', label: 'Go to activities' },
+  ]);
 
   const openExpenseModal = (type: ExpenseModalType) => {
     setActiveExpenseModal(type);

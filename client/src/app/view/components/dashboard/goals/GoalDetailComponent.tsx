@@ -56,7 +56,7 @@ export default function GoalDetailComponent() {
       <section className='flex justify-center h-screen'>
         <div className='flex justify-items-start border w-[90%] p-4'>
           <article className='flex flex-col'>
-            <h1 className='text-xl'>{goal.title}</h1>
+            <h1 id='main-content' className='text-xl'>{goal.title}</h1>
             <div className='border border-gray-400' />
             <GoalItem goal={goal} />
             <div className='border border-gray-400' />
