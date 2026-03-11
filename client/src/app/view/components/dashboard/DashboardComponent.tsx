@@ -8,7 +8,7 @@ import TransactionFormModal from './transactions/TransactionFormModal';
 import TransactionActivities from './transactions/TransactionActivities';
 import GoalComponent from './goals/GoalComponent';
 import GoalFormModal from './goals/GoalFormModal';
-import { useRegisterSkipLinks } from '../../../hook/skipLinkHooks';
+import { useRegisterSkipLinks } from '../../../hooks/skipLinkHooks';
 
 type ExpenseModalType = 'income' | 'expense';
 
