@@ -1,7 +1,7 @@
 export type Goal = {
   title: string;
   description: string;
-  price: number;
+  targetAmount: number;
 };
 
 export type UpdateGoal = Goal & {
