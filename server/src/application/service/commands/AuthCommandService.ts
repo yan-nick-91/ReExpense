@@ -19,9 +19,11 @@ import {
 import { InvalidCredentialsException } from '../../../domain/exceptions/InvalidCredentialsException.js';
 import { NotFoundException } from '../../../domain/exceptions/NotFoundException.js';
 import { generateResetToken } from '../../utils/generators.js';
+import { SavingCommandService } from './SavingCommandService.js';
 
 export class AuthCommandService {
   private userRepository = AppDataSource.getRepository(User);
+  private savingCommandService = new SavingCommandService();
   private mailCommandService = new MailCommandService();
 
   async register(dto: AuthUserDTO): Promise<UserTokenResponseDTO> {
@@ -42,6 +44,8 @@ export class AuthCommandService {
     });
 
     const savedUser = await this.userRepository.save(user);
+    await this.savingCommandService.initializeFirstSaving(user.id)
+
     const token = this.signToken(savedUser.id);
     return { token };
   }
