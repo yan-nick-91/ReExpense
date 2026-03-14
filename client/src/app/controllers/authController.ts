@@ -8,6 +8,7 @@ import {
   forgotPassword,
   resetForgottenPassword,
 } from '../api/authHttpHandler';
+import { clearSavings } from '../store/slice/savingSlice';
 
 export const registerController = (
   dispatch: AppDispatch,
@@ -53,4 +54,5 @@ export const resetForgottenPasswordController = (
 
 export const logoutController = (dispatch: AppDispatch) => {
   dispatch(logout()).unwrap();
+  dispatch(clearSavings())
 };
