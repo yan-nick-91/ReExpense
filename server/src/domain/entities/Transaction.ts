@@ -22,9 +22,9 @@ export class Transaction {
   @JoinColumn({ name: 'user_id' })
   user!: User;
 
-  @ManyToOne(() => Saving, (balance) => balance.transactions)
-  @JoinColumn({ name: 'balance_id'})
-  balance!: Saving;
+  @ManyToOne(() => Saving, (saving) => saving.transactions)
+  @JoinColumn({ name: 'saving_id'})
+  saving!: Saving;
 
   @Column('decimal', { precision: 12, scale: 2 })
   amount!: number;

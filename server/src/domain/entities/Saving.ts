@@ -24,6 +24,6 @@ export class Saving {
   @Column('decimal', { precision: 12, scale: 2, default: 0 })
   balance!: number;
 
-  @OneToMany(() => Transaction, (transaction) => transaction.balance)
+  @OneToMany(() => Transaction, (transaction) => transaction.saving)
   transactions!: Transaction[];
 }
