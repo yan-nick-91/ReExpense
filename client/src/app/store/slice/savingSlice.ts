@@ -19,7 +19,14 @@ const initialState: SavingState = {
 const savingSlice = createSlice({
   name: 'savings',
   initialState,
-  reducers: {},
+  reducers: {
+    clearSavings: (state) => {
+      state.items = [];
+      state.success = false;
+      state.error = undefined
+      state.loading = false
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getAllSavingBalances.pending, (state) => {
@@ -38,4 +45,5 @@ const savingSlice = createSlice({
   },
 });
 
+export const { clearSavings } = savingSlice.actions;
 export default savingSlice.reducer
