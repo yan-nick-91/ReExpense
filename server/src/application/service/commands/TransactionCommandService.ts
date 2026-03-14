@@ -7,9 +7,11 @@ import { User } from '../../../domain/entities/User.js';
 
 import type { CreateTransactionDTO } from '../../dto/in/CreateTransactionDTO.js';
 import type { TransactionResponseDTO } from './../../dto/out/TransactionResponseDTO.js';
+import { SavingCommandService } from './SavingCommandService.js';
 
 export class TransactionCommandService {
   private transactionRepository = AppDataSource.getRepository(Transaction);
+  private savingCommandService = new SavingCommandService();
 
   async create(
     userId: string,
@@ -35,6 +37,12 @@ export class TransactionCommandService {
     });
 
     const savedTransaction = await this.transactionRepository.save(transaction);
+
+    await this.savingCommandService.modifyingSaving(
+      userId,
+      amount,
+      transaction.type,
+    );
 
     return {
       id: savedTransaction.id,
