@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from './User.js';
+import { Saving } from './Saving.js';
 
 export enum TransactionType {
   INCOME = 'income',
@@ -20,6 +21,10 @@ export class Transaction {
   @ManyToOne(() => User, (user) => user.transactions)
   @JoinColumn({ name: 'user_id' })
   user!: User;
+
+  @ManyToOne(() => Saving, (balance) => balance.transactions)
+  @JoinColumn({ name: 'balance_id'})
+  balance!: Saving;
 
   @Column('decimal', { precision: 12, scale: 2 })
   amount!: number;
