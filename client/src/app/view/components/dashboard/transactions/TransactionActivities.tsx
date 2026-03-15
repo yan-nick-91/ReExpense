@@ -1,13 +1,21 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../../../../store/store';
 import clsx from 'clsx';
 import Button from '../../../UI/Button';
 import { convertDateToLocaleDate } from '../../../../utils/globalFunctions';
+import { useEffect } from 'react';
+import { getAllTransactionController } from '../../../../controllers/transactionController';
 
 export default function TransactionActivities() {
+  const dispatch = useDispatch();
+
   const transactions = useSelector(
     (state: RootState) => state.transaction.items,
   );
+
+  useEffect(() => {
+    getAllTransactionController(dispatch);
+  }, [dispatch]);
 
   return (
     <div className='px-4 py-2 mt-3 h-60 overflow-y-scroll'>
