@@ -15,11 +15,10 @@ router.post('/create', authMiddleware, async (req: AuthRequest, res) => {
   res.status(201).json(result);
 });
 
-router.get("/", authMiddleware, async (req: AuthRequest, res) => {
+router.get('/', authMiddleware, async (req: AuthRequest, res) => {
   const userId = req.user!.id;
   const result =
     await transactionQueryService.getAllTransactionByUserId(userId);
-
   return res.status(200).json({ userTransactions: result });
 });
 
