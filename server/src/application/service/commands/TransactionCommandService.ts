@@ -8,6 +8,10 @@ import { User } from '../../../domain/entities/User.js';
 import type { CreateTransactionDTO } from '../../dto/in/CreateTransactionDTO.js';
 import type { TransactionResponseDTO } from './../../dto/out/TransactionResponseDTO.js';
 import { SavingCommandService } from './SavingCommandService.js';
+import {
+  BelowMinimumException,
+  RequiredFieldMissingValueException,
+} from '../../../domain/exceptions/GeneralExceptions.js';
 
 export class TransactionCommandService {
   private transactionRepository = AppDataSource.getRepository(Transaction);
@@ -20,11 +24,13 @@ export class TransactionCommandService {
     const { amount, category, type } = dto;
 
     if (!amount || !category || !type) {
-      throw new Error('Not all fields contains a value');
+      throw new RequiredFieldMissingValueException(
+        'Not all fields contains a value',
+      );
     }
 
     if (amount <= 0.0) {
-      throw new Error(
+      throw new BelowMinimumException(
         'Amount must be greater then 0.0 to create a new transaction',
       );
     }
