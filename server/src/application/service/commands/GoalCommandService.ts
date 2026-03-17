@@ -1,5 +1,5 @@
 import { Goal } from '../../../domain/entities/Goal.js';
-import { NotFoundException } from '../../../domain/exceptions/NotFoundException.js';
+import { NotFoundException } from '../../../domain/exceptions/GeneralExceptions.js';
 import { AppDataSource } from '../../../infrastructure/database/data-source.js';
 
 import type { GoalDTO } from '../../dto/in/GoalDTO.js';
