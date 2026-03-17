@@ -1,7 +1,6 @@
 import { AppDataSource } from '../../../infrastructure/database/data-source.js';
 import { Saving } from '../../../domain/entities/Saving.js';
 import type { SavingResponseDTO } from '../../dto/out/SavingResponseDTO.js';
-import { NotFoundException } from '../../../domain/exceptions/NotFoundException.js';
 
 export class SavingQueryService {
   private getRepository = AppDataSource.getRepository(Saving);
@@ -17,18 +16,4 @@ export class SavingQueryService {
       return { id: saving.id, name: saving.name, balance: saving.balance };
     });
   }
-
-  //   async getSavingBySavingId(savingId: string): Promise<SavingResponseDTO> {
-  //     const saving = await this.getRepository.findOne({
-  //       where: { id: savingId },
-  //     });
-
-  //     if (!saving) throw new NotFoundException('Saving not found');
-
-  //     return {
-  //       id: saving.id,
-  //       name: saving.name,
-  //       balance: saving.balance,
-  //     };
-  //   }
 }
