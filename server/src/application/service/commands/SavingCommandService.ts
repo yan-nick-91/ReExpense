@@ -1,7 +1,7 @@
 import { Saving } from '../../../domain/entities/Saving.js';
 import type { TransactionType } from '../../../domain/entities/Transaction.js';
+import { NotFoundException } from '../../../domain/exceptions/GeneralExceptions.js';
 import { InsufficientAmountException } from '../../../domain/exceptions/InsufficientAmountException.js';
-import { NotFoundException } from '../../../domain/exceptions/NotFoundException.js';
 import { AppDataSource } from '../../../infrastructure/database/data-source.js';
 
 export class SavingCommandService {
