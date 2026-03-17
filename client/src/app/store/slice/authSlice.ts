@@ -46,7 +46,16 @@ const authSlice = createSlice({
       .addCase(login.pending, (state) => {
         state.loading = true;
       })
-      .addCase(login.fulfilled, (state) => {
+      .addCase(login.fulfilled, (state, action) => {
+        if (!action.payload || !('token' in action.payload)) {
+          state.isAuthenticated = false;
+          state.loading = false;
+          state.error =
+            action.payload && 'message' in action.payload
+              ? String(action.payload.message)
+              : 'Login failed';
+          return;
+        }
         state.isAuthenticated = true;
         state.loading = false;
       })
@@ -57,7 +66,16 @@ const authSlice = createSlice({
       .addCase(register.pending, (state) => {
         state.loading = true;
       })
-      .addCase(register.fulfilled, (state) => {
+      .addCase(register.fulfilled, (state, action) => {
+        if (!action.payload || !('token' in action.payload)) {
+          state.isAuthenticated = false;
+          state.loading = false;
+          state.error =
+            action.payload && 'message' in action.payload
+              ? String(action.payload.message)
+              : 'Register failed';
+          return;
+        }
         state.isAuthenticated = true;
         state.loading = false;
       })
@@ -100,7 +118,7 @@ const authSlice = createSlice({
       .addCase(resetForgottenPassword.rejected, (state, action) => {
         state.loading = false;
         state.resetPasswordSuccess = false;
-        state.error = action.error.message
+        state.error = action.error.message;
       })
       .addCase(logout.fulfilled, (state) => {
         state.isAuthenticated = false;
