@@ -23,7 +23,7 @@ export class Transaction {
   user!: User;
 
   @ManyToOne(() => Saving, (saving) => saving.transactions)
-  @JoinColumn({ name: 'saving_id'})
+  @JoinColumn({ name: 'saving_id' })
   saving!: Saving;
 
   @Column('decimal', { precision: 12, scale: 2 })
@@ -39,7 +39,6 @@ export class Transaction {
 
   @Column({
     type: 'datetime',
-    default: () => 'CURRENT_TIMESTAMP',
     transformer: {
       to: (value: string | Date) => value,
       from: (value: Date) => value.toISOString(),
