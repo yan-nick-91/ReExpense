@@ -4,11 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev:front": "cd client && npm run dev",
     "dev:back": "cd server && npm run dev",
     "dev:debug:back": "cd server && npm run dev:debug",
-    "dev:all": "concurrently \"npm run dev:back\" \"npm run dev:front\""
+    "dev:all": "concurrently \"npm run dev:back\" \"npm run dev:front\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:back": "cd server && npm run test",
+    "test:back:r": "cd server && npm run test:run",
+    "test:back:c": "cd server && npm run test:coverage",
+    "test:back:c-img": "cd server && npm run test:coverage:img"
   },
   "keywords": [],
   "author": "",
