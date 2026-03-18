@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { User } from '../../../src/domain/entities/User';
-import { getMetadataArgsStorage } from 'typeorm';
 import { Saving } from '../../../src/domain/entities/Saving';
 import { Transaction } from '../../../src/domain/entities/Transaction';
 import { Goal } from '../../../src/domain/entities/Goal';
+import { getRelations } from '../helpers/domainhelpers';
 
 describe('User entity', () => {
   it('should create user with required fields', () => {
@@ -16,10 +16,7 @@ describe('User entity', () => {
   });
 
   it('should have OneToMany relation to Saving', () => {
-    const relation = getMetadataArgsStorage().relations.find(
-      (r) => r.target === User && r.propertyName === 'savings',
-    );
-
+    const relation = getRelations(User, 'savings');
     expect(relation).toBeDefined();
     expect(relation!.relationType).toBe('one-to-many');
 
@@ -29,10 +26,7 @@ describe('User entity', () => {
   });
 
   it('should have ManyToOne relation to Saving with inverse side', () => {
-    const relation = getMetadataArgsStorage().relations.find(
-      (r) => r.target === User && r.propertyName === 'savings',
-    );
-
+    const relation = getRelations(User, 'savings');
     const inverseSideFn = relation!.inverseSideProperty as (obj: any) => any;
     const mockSaving = new Saving();
     const inverseResult = inverseSideFn(mockSaving);
@@ -40,10 +34,7 @@ describe('User entity', () => {
   });
 
   it('should have OneToMany relation to Transaction', () => {
-    const relation = getMetadataArgsStorage().relations.find(
-      (r) => r.target === User && r.propertyName === 'transactions',
-    );
-
+    const relation = getRelations(User, 'transactions');
     expect(relation).toBeDefined();
     expect(relation!.relationType).toBe('one-to-many');
 
@@ -53,10 +44,7 @@ describe('User entity', () => {
   });
 
   it('should have ManyToOne relation to Transaction with inverse side', () => {
-    const relation = getMetadataArgsStorage().relations.find(
-      (r) => r.target === User && r.propertyName === 'transactions',
-    );
-
+    const relation = getRelations(User, 'transactions');
     const inverseSideFn = relation!.inverseSideProperty as (obj: any) => any;
     const mockTransaction = new Transaction();
     const inverseResult = inverseSideFn(mockTransaction);
@@ -64,10 +52,7 @@ describe('User entity', () => {
   });
 
   it('should have OneToMany relation to Goal', () => {
-    const relation = getMetadataArgsStorage().relations.find(
-      (r) => r.target === User && r.propertyName === 'goals',
-    );
-
+    const relation = getRelations(User, 'goals');
     expect(relation).toBeDefined();
     expect(relation!.relationType).toBe('one-to-many');
 
@@ -76,11 +61,8 @@ describe('User entity', () => {
     expect(typeResult).toBe(Goal);
   });
 
-    it('should have ManyToOne relation to Transaction with inverse side', () => {
-    const relation = getMetadataArgsStorage().relations.find(
-      (r) => r.target === User && r.propertyName === 'goals',
-    );
-
+  it('should have ManyToOne relation to Transaction with inverse side', () => {
+    const relation = getRelations(User, 'goals');
     const inverseSideFn = relation!.inverseSideProperty as (obj: any) => any;
     const mockGoal = new Goal();
     const inverseResult = inverseSideFn(mockGoal);

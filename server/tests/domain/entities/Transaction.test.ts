@@ -3,9 +3,9 @@ import {
   Transaction,
   TransactionType,
 } from '../../../src/domain/entities/Transaction';
-import { getMetadataArgsStorage } from 'typeorm';
 import { User } from '../../../src/domain/entities/User';
 import { Saving } from '../../../src/domain/entities/Saving';
+import { getRelations, getTransformer } from '../helpers/domainhelpers';
 
 describe('Transaction entity', () => {
   it('should create a transaction with required fields', () => {
@@ -21,10 +21,7 @@ describe('Transaction entity', () => {
   });
 
   it('should have ManyToOne relation to User', () => {
-    const relation = getMetadataArgsStorage().relations.find(
-      (r) => r.target === Transaction && r.propertyName === 'user',
-    );
-
+    const relation = getRelations(Transaction, 'user')
     expect(relation).toBeDefined();
     expect(relation!.relationType).toBe('many-to-one');
 
@@ -34,10 +31,7 @@ describe('Transaction entity', () => {
   });
 
   it('should have ManyToOne relation to User with inverse side', () => {
-    const relation = getMetadataArgsStorage().relations.find(
-      (r) => r.target === Transaction && r.propertyName === 'user',
-    );
-
+    const relation = getRelations(Transaction, 'user');
     const inverseSideFn = relation!.inverseSideProperty as (obj: any) => any;
     const mockUser = new User();
     const inverseResult = inverseSideFn(mockUser);
@@ -45,23 +39,17 @@ describe('Transaction entity', () => {
   });
 
   it('should have ManyToOne relation to Saving', () => {
-    const relation = getMetadataArgsStorage().relations.find(
-      (r) => r.target === Transaction && r.propertyName === 'saving',
-    );
-
+    const relation = getRelations(Transaction, 'saving');
     expect(relation).toBeDefined();
     expect(relation!.relationType).toBe('many-to-one');
 
     const relationTypeFn = relation!.type as () => unknown;
     const typeResult = relationTypeFn();
     expect(typeResult).toBe(Saving);
-  })
+  });
 
   it('should have ManyToOne relation to Saving with inverse side', () => {
-    const relation = getMetadataArgsStorage().relations.find(
-      (r) => r.target === Transaction && r.propertyName === 'saving',
-    );
-
+    const relation = getRelations(Transaction, 'saving');
     const inverseSideFn = relation!.inverseSideProperty as (obj: any) => any;
     const mockSaving = new Saving();
     const inverseResult = inverseSideFn(mockSaving);
@@ -69,23 +57,16 @@ describe('Transaction entity', () => {
   });
 
   it('should convert created date to ISO string', () => {
-      const transformer = getTransformer('date');
-      const date = new Date();
-      const result = transformer.from(date);
-      expect(result).toBe(date.toISOString());
-    });
-  
-    it('should convert create date to Date', () => {
-      const transformer = getTransformer('date');
-      const date = new Date();
-      const result = transformer.to(date);
-      expect(result).toBe(date);
-    });
-});
+    const transformer = getTransformer(Transaction, 'date');
+    const date = new Date();
+    const result = transformer.from(date);
+    expect(result).toBe(date.toISOString());
+  });
 
-const getTransformer = (property: string) => {
-  const column = getMetadataArgsStorage().columns.find(
-    (c) => c.target === Transaction && c.propertyName === property,
-  );
-  return (column?.options as any)?.transformer;
-};
+  it('should convert create date to Date', () => {
+    const transformer = getTransformer(Transaction, 'date');
+    const date = new Date();
+    const result = transformer.to(date);
+    expect(result).toBe(date);
+  });
+});
