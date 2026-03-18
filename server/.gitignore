@@ -4,4 +4,4 @@ certs
 json
 *.sqlite
 dist
-tests/misc
+tests/report
