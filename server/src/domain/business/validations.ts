@@ -17,13 +17,13 @@ export const verifyPasswordLength = (password: string) => {
   const MINIMUM_PASSWORD_LENGTH = 8;
   if (password.length < MINIMUM_PASSWORD_LENGTH) {
     throw new InvalidPasswordLengthException(
-      'Password must at least 8 characters',
+      'Password must at least be 8 characters',
     );
   }
 };
 
 export const emailAlreadyTaken = (existingUser: User | null) => {
-  if (existingUser) {
+  if (existingUser || existingUser !== null) {
     throw new EmailAlreadyUsedException('Email already in use');
   }
 };
