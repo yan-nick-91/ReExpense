@@ -1,7 +1,6 @@
 import type { ResetPasswordRequestDTO } from '../../dto/in/ResetPasswordRequestDTO.js';
 import nodemailer from 'nodemailer';
 
-
 export class MailCommandService {
   private transporter?: nodemailer.Transporter;
 
@@ -30,8 +29,8 @@ export class MailCommandService {
       auth: {
         user: testAccount.user,
         pass: testAccount.pass,
-      }
-    })
+      },
+    });
 
     console.log('Ethereal test account created:');
     console.log('User:', testAccount.user);
@@ -57,7 +56,7 @@ export class MailCommandService {
     });
     console.log(`Mail sent to ${email}`);
     if (process.env.NODE_ENV === 'development') {
-        console.log('Preview URL:', nodemailer.getTestMessageUrl(info))
+      console.log('Preview URL:', nodemailer.getTestMessageUrl(info));
     }
   }
 }

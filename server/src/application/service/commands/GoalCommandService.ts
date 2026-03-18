@@ -1,5 +1,5 @@
 import { Goal } from '../../../domain/entities/Goal.js';
-import { NotFoundException } from '../../../domain/exceptions/NotFoundException.js';
+import { NotFoundException } from '../../../domain/exceptions/GeneralExceptions.js';
 import { AppDataSource } from '../../../infrastructure/database/data-source.js';
 
 import type { GoalDTO } from '../../dto/in/GoalDTO.js';
@@ -17,7 +17,7 @@ export class GoalCommandService {
       throw new Error('Title is required');
     }
 
-    if (dto.price === 0.0) {
+    if (dto.targetAmount === 0.0) {
       throw new Error('Savings should be higher than 0.0');
     }
 
@@ -26,7 +26,7 @@ export class GoalCommandService {
       user: { id: userId },
       title: dto.title,
       description: dto.description,
-      price: dto.price,
+      targetAmount: dto.targetAmount,
       createdAt: currentTime,
     });
 
@@ -50,7 +50,7 @@ export class GoalCommandService {
 
     goal.title = dto.title;
     goal.description = dto.description;
-    goal.price = dto.price;
+    goal.targetAmount = dto.targetAmount;
     goal.updatedAt = currentTime;
 
     const savedGoal = await this.goalRepository.save(goal);

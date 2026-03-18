@@ -8,10 +8,11 @@ export class TransactionQueryService {
   async getAllTransactionByUserId(
     userId: string,
   ): Promise<TransactionResponseDTO[] | []> {
-    const transactions: Transaction[] = await this.transactionRepository.find({
-      where: { user: { id: userId } },
-      relations: ['user']
-    });
+    const transactions: Transaction[] = await this.transactionRepository
+      .createQueryBuilder('transaction')
+      .leftJoinAndSelect('transaction.user', 'user')
+      .where('user.id = :userId', { userId })
+      .getMany();
 
     return transactions.map((t) => ({
       id: t.id,

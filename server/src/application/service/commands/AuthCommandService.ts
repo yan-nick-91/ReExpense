@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import crypto from 'crypto'
+import crypto from 'crypto';
 import { JWT_SECRET } from '../../../config/config.js';
 import { AppDataSource } from '../../../infrastructure/database/data-source.js';
 import { User } from '../../../domain/entities/User.js';
@@ -16,12 +16,17 @@ import {
   verifyPasswordLength,
   verifyPassword,
 } from '../../../domain/business/validations.js';
-import { InvalidCredentialsException } from '../../../domain/exceptions/InvalidCredentialsException.js';
-import { NotFoundException } from '../../../domain/exceptions/NotFoundException.js';
 import { generateResetToken } from '../../utils/generators.js';
+import { SavingCommandService } from './SavingCommandService.js';
+import {
+  InvalidCredentialsException,
+  TokenException,
+} from '../../../domain/exceptions/AuthenticationExceptions.js';
+import { NotFoundException } from '../../../domain/exceptions/GeneralExceptions.js';
 
 export class AuthCommandService {
   private userRepository = AppDataSource.getRepository(User);
+  private savingCommandService = new SavingCommandService();
   private mailCommandService = new MailCommandService();
 
   async register(dto: AuthUserDTO): Promise<UserTokenResponseDTO> {
@@ -42,6 +47,8 @@ export class AuthCommandService {
     });
 
     const savedUser = await this.userRepository.save(user);
+    await this.savingCommandService.initializeFirstSaving(user.id);
+
     const token = this.signToken(savedUser.id);
     return { token };
   }
@@ -80,7 +87,9 @@ export class AuthCommandService {
     return { token: newToken };
   }
 
-  async forgotPassword(dto: ResetPasswordRequestDTO): Promise<{message: string}> {
+  async forgotPassword(
+    dto: ResetPasswordRequestDTO,
+  ): Promise<{ message: string }> {
     const { email } = dto;
     const user = await this.userRepository.findOne({ where: { email } });
     if (!user) throw new NotFoundException("User's email not found");
@@ -90,20 +99,17 @@ export class AuthCommandService {
     const oneHour = 1000 * 60 * 60;
     user.passwordResetExpires = new Date(Date.now() + oneHour);
     await this.userRepository.save(user);
-    
+
     const resetUrl = `${process.env.FRONTEND_URL}/reset/password/${resetToken}`;
     await this.mailCommandService.forgotPassword(
       { email: user.email },
       resetUrl,
     );
-    return { message: `Message sent to email ${user.email}`}
+    return { message: `Message sent to email ${user.email}` };
   }
 
   async resetPassword(token: string, newPassword: string) {
-    const hashedToken = crypto
-      .createHash('sha256')
-      .update(token)
-      .digest('hex');
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
     const user = await this.userRepository.findOne({
       where: { passwordResetToken: hashedToken },
@@ -114,7 +120,7 @@ export class AuthCommandService {
       !user.passwordResetExpires ||
       user.passwordResetExpires < new Date()
     ) {
-      throw new Error('Token is invalid or expired');
+      throw new TokenException('Token is invalid or expired');
     }
 
     user.password = await bcrypt.hash(newPassword, 10);

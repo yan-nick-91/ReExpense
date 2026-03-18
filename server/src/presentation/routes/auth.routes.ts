@@ -7,6 +7,10 @@ import { type AuthRequest } from '../../types/authTypes.js';
 import type { AuthUserDTO } from '../../application/dto/in/AuthUserDTO.js';
 import type { AuthUpdatePasswordDTO } from './../../application/dto/in/AuthUpdatePasswordDTO.js';
 import type { ResetPasswordRequestDTO } from './../../application/dto/in/ResetPasswordRequestDTO.js';
+import {
+  EmailAlreadyUsedException,
+  InvalidCredentialsException,
+} from '../../domain/exceptions/AuthenticationExceptions.js';
 
 const router = Router();
 const authCommandService = new AuthCommandService();
@@ -18,6 +22,9 @@ router.post('/register', async (req, res) => {
     const result = await authCommandService.register(dto);
     res.status(201).json(result);
   } catch (err) {
+    if (err instanceof EmailAlreadyUsedException) {
+      return res.status(409).json({ error: err.message });
+    }
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
@@ -28,6 +35,10 @@ router.post('/login', async (req, res) => {
     const result = await authCommandService.login(dto);
     return res.status(200).json(result);
   } catch (err) {
+    if (err instanceof InvalidCredentialsException) {
+      return res.status(409).json({ error: err.message });
+    }
+
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
@@ -68,12 +79,12 @@ router.get('/reset/password/validate/:token', async (req, res) => {
   const { token } = req.params;
 
   try {
-    await authQueryService.validateResetPasswordToken(token!)
-    res.status(200).json({ valid: true })
+    await authQueryService.validateResetPasswordToken(token!);
+    res.status(200).json({ valid: true });
   } catch (err) {
-    res.status(400).json({ error: 'Token invalid or expired' })
+    res.status(400).json({ error: 'Token invalid or expired' });
   }
-})
+});
 
 router.post('/reset/password/:token', async (req, res) => {
   const { token } = req.params;

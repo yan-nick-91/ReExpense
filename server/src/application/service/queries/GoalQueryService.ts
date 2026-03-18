@@ -7,10 +7,11 @@ export class GoalQueryService {
   private goalRepository = AppDataSource.getRepository(Goal);
 
   async getAllGoalsByUserId(userId: string): Promise<GoalResponseDTO[] | []> {
-    const goals: Goal[] = await this.goalRepository.find({
-      where: { user: { id: userId } },
-      relations: ['user'],
-    });
+    const goals: Goal[] = await this.goalRepository
+      .createQueryBuilder('goal')
+      .leftJoinAndSelect('goal.user', 'user')
+      .where('user.id = :userId', { userId })
+      .getMany();
     return goals.map((goal) => toGeneralGoalResponseDTO(goal));
   }
 }

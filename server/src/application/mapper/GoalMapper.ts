@@ -6,7 +6,7 @@ export const toUpdateGoal = (dto: GoalDTO) => {
   return {
     title: dto.title,
     description: dto.description,
-    price: dto.price,
+    targetAmount: dto.targetAmount,
   };
 };
 
@@ -16,7 +16,7 @@ export const createToGoalResponseDTO = (goal: Goal): GoalResponseDTO => {
     userId: goal.user.id,
     title: goal.title,
     description: goal.description!,
-    price: goal.price,
+    targetAmount: goal.targetAmount,
     createdAt: goal.createdAt,
   };
 };
@@ -27,7 +27,7 @@ export const updateToGoalResponseDTO = (goal: Goal): GoalResponseDTO => {
     userId: goal.user.id,
     title: goal.title,
     description: goal.description!,
-    price: goal.price,
+    targetAmount: goal.targetAmount,
     updatedAt: goal.updatedAt!,
   };
 };
@@ -38,7 +38,7 @@ export const toGeneralGoalResponseDTO = (goal: Goal): GoalResponseDTO => {
     userId: goal.user.id,
     title: goal.title,
     description: goal.description!,
-    price: goal.price,
+    targetAmount: goal.targetAmount,
     createdAt: goal.createdAt,
     updatedAt: goal.updatedAt!,
   };

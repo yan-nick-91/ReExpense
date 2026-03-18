@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from './User.js';
+import { Saving } from './Saving.js';
 
 export enum TransactionType {
   INCOME = 'income',
@@ -21,6 +22,10 @@ export class Transaction {
   @JoinColumn({ name: 'user_id' })
   user!: User;
 
+  @ManyToOne(() => Saving, (saving) => saving.transactions)
+  @JoinColumn({ name: 'saving_id' })
+  saving!: Saving;
+
   @Column('decimal', { precision: 12, scale: 2 })
   amount!: number;
 
@@ -34,7 +39,6 @@ export class Transaction {
 
   @Column({
     type: 'datetime',
-    default: () => 'CURRENT_TIMESTAMP',
     transformer: {
       to: (value: string | Date) => value,
       from: (value: Date) => value.toISOString(),

@@ -101,14 +101,14 @@ export default function DashboardComponent() {
       </div>
       {activeExpenseModal === 'income' && (
         <TransactionFormModal
-          expenseType={activeExpenseModal}
+          transactionType={activeExpenseModal}
           onClose={closeExpenseModal}
         />
       )}
 
       {activeExpenseModal === 'expense' && (
         <TransactionFormModal
-          expenseType={activeExpenseModal}
+          transactionType={activeExpenseModal}
           onClose={closeExpenseModal}
         />
       )}

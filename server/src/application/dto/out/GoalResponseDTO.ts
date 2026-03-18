@@ -3,7 +3,7 @@ export interface GoalResponseDTO {
   userId: string;
   title: string;
   description: string;
-  price: number;
+  targetAmount: number;
   createdAt?: string;
   updatedAt?: string;
 }

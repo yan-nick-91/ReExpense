@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import authRoutes from './presentation/routes/auth.routes.js';
 import goalRoutes from './presentation/routes/goal.routes.js'
+import savingRoutes from './presentation/routes/saving.routes.js'
 import transactionRoutes from './presentation/routes/transaction.route.js';
 import { AppDataSource } from './infrastructure/database/data-source.js';
 
@@ -24,6 +25,7 @@ app.use(
 
   app.use('/api/auth', authRoutes);
   app.use('/api/goals', goalRoutes);
+  app.use('/api/savings',  savingRoutes)
   app.use('/api/transactions', transactionRoutes);
 
   app.get('/', (_req, res) => {

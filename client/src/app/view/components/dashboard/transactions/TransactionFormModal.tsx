@@ -1,17 +1,20 @@
 import { useEffect, useState, type ChangeEvent, type SubmitEvent } from 'react';
 import Button from '../../../UI/Button';
 import TransactionInputComponent from './TransactionInputComponent';
-import { validationAboveZeroResult, validationStringResult } from '../../../../validations/globalValidation';
+import {
+  validationAboveZeroResult,
+  validationStringResult,
+} from '../../../../validations/globalValidation';
 import clsx from 'clsx';
 import { createTransactionController } from '../../../../controllers/transactionController';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../../../store/store';
 import { resetSuccessCreate } from '../../../../store/slice/transactionSlice';
 
-type ExpenseType = 'income' | 'expense';
+type TransactionType = 'income' | 'expense';
 
 type Props = {
-  expenseType: ExpenseType;
+  transactionType: TransactionType;
   onClose: () => void;
 };
 
@@ -25,7 +28,10 @@ type ErrorState = {
   category?: string;
 };
 
-export default function ExpenseFormModal({ expenseType, onClose }: Props) {
+export default function TransactionFormModal({
+  transactionType,
+  onClose,
+}: Props) {
   const dispatch = useDispatch<AppDispatch>();
   const createTransactionSuccessful = useSelector(
     (state: RootState) => state.transaction.success,
@@ -44,7 +50,7 @@ export default function ExpenseFormModal({ expenseType, onClose }: Props) {
     const timer = setTimeout(() => {
       dispatch(resetSuccessCreate());
     }, 3000);
-    return () => clearTimeout(timer)
+    return () => clearTimeout(timer);
   }, [createTransactionSuccessful, dispatch]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +62,7 @@ export default function ExpenseFormModal({ expenseType, onClose }: Props) {
     }));
   };
 
-  const submitExpenseHandler = (e: SubmitEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const amountResult = validationAboveZeroResult(
@@ -82,15 +88,15 @@ export default function ExpenseFormModal({ expenseType, onClose }: Props) {
     const amountAsNumber: number = +form.amount;
 
     try {
-      createTransactionController(dispatch, {
+      await createTransactionController(dispatch, {
         amount: amountAsNumber,
         category: form.category,
-        type: expenseType,
+        type: transactionType,
       });
       setForm({
         amount: '',
-        category: ''
-      })
+        category: '',
+      });
     } catch (err) {
       console.error(err);
     }
@@ -104,10 +110,10 @@ export default function ExpenseFormModal({ expenseType, onClose }: Props) {
     >
       <form
         className='bg-white p-4 rounded-[0.2rem] shadow-lg w-200'
-        onSubmit={submitExpenseHandler}
+        onSubmit={submitHandler}
       >
         <h2 className='text-xl font-bold mb-4'>
-          Add {`${expenseType === 'income' ? 'income' : 'expense'}`}
+          Add {`${transactionType === 'income' ? 'income' : 'expense'}`}
         </h2>
         <div className='mb-8'>
           <TransactionInputComponent

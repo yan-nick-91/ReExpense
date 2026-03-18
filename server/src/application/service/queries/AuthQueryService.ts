@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 import { AppDataSource } from '../../../infrastructure/database/data-source.js';
 import { User } from '../../../domain/entities/User.js';
-import type { UserResponseDTO } from '../../dto/out/UserResponse.js';
 import { verifyFoundUser } from '../../../domain/business/validations.js';
+import { TokenException } from '../../../domain/exceptions/AuthenticationExceptions.js';
 
 export class AuthQueryService {
   private userRepository = AppDataSource.getRepository(User);
@@ -21,8 +21,12 @@ export class AuthQueryService {
       where: { passwordResetToken: hashedToken },
     });
 
-    if (!user || !user.passwordResetExpires || user.passwordResetExpires! < new Date()) {
-      throw new Error('Token invalid or expired')
+    if (
+      !user ||
+      !user.passwordResetExpires ||
+      user.passwordResetExpires! < new Date()
+    ) {
+      throw new TokenException('Token invalid or expired');
     }
   }
 }

@@ -55,7 +55,7 @@ export default function GoalFormModal({
           id: editGoal.id,
           title: editGoal.title,
           description: editGoal.description,
-          price: String(editGoal.price),
+          price: String(editGoal.targetAmount),
         }
       : { id: '', title: '', description: '', price: '' },
   );
@@ -108,14 +108,14 @@ export default function GoalFormModal({
         createGoalController(dispatch, {
           title: form.title,
           description: form.description,
-          price: priceAsNumber,
+          targetAmount: priceAsNumber,
         });
       } else {
         updateGoalController(dispatch, {
           id: editGoal!.id,
           title: editForm.title,
           description: editForm.description,
-          price: priceAsNumber,
+          targetAmount: priceAsNumber,
         });
       }
     } catch (err) {
