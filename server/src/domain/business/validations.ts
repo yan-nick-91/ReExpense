@@ -35,3 +35,9 @@ export const verifyFoundUser = (user: User | null, errorMessage: string) => {
 export const verifyPassword = (isValid: boolean) => {
   if (!isValid) throw new InvalidCredentialsException('Invalid credentials');
 };
+
+export const verifyPasswordEquals = (currentPassword: string, newPassword: string) => {
+  if (currentPassword === newPassword) {
+    throw new InvalidCredentialsException('New password cannot be equals as the current password')
+  }
+}

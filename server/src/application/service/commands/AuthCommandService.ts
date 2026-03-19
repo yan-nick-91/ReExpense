@@ -15,8 +15,8 @@ import {
   verifyFoundUser,
   verifyPasswordLength,
   verifyPassword,
+  verifyPasswordEquals,
 } from '../../../domain/business/validations.js';
-import { generateResetToken } from '../../utils/generators.js';
 import { SavingCommandService } from './SavingCommandService.js';
 import {
   InvalidCredentialsException,
@@ -78,6 +78,7 @@ export class AuthCommandService {
       user!.password,
     );
     verifyPassword(currentPassword);
+    verifyPasswordEquals(dto.currentPassword, dto.newPassword)
 
     const hashedPassword = await bcrypt.hash(dto.newPassword, 10);
     user!.password = hashedPassword;
@@ -94,7 +95,7 @@ export class AuthCommandService {
     const user = await this.userRepository.findOne({ where: { email } });
     if (!user) throw new NotFoundException("User's email not found");
 
-    const { resetToken, hashedToken } = generateResetToken();
+    const { resetToken, hashedToken } = this.generateResetToken();
     user.passwordResetToken = hashedToken;
     const oneHour = 1000 * 60 * 60;
     user.passwordResetExpires = new Date(Date.now() + oneHour);
@@ -133,5 +134,11 @@ export class AuthCommandService {
   // helpers
   private signToken(userId: string) {
     return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '1h' });
+  }
+
+  private generateResetToken() {
+      const resetToken = crypto.randomBytes(32).toString('hex')
+      const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex')
+      return { resetToken, hashedToken }
   }
 }
