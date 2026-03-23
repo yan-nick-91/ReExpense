@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { User } from './User.js';
 import { Transaction } from './Transaction.js';
+import { Goal } from './Goal.js';
 
 @Entity('savings')
 export class Saving {
@@ -26,4 +27,7 @@ export class Saving {
 
   @OneToMany(() => Transaction, (transaction) => transaction.saving)
   transactions!: Transaction[];
+
+  @OneToMany(() => Goal, (goal) => goal.saving)
+  goals!: Goal[];
 }
