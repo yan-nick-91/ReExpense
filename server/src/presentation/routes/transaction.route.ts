@@ -16,10 +16,10 @@ router.post('/create', authMiddleware, async (req: AuthRequest, res) => {
 });
 
 router.get('/', authMiddleware, async (req: AuthRequest, res) => {
-  const userId = req.user!.id;
+  const { savingId } = req.body
   const result =
-    await transactionQueryService.getAllTransactionByUserId(userId);
-  return res.status(200).json({ userTransactions: result });
+    await transactionQueryService.getAllTransactionBySavingId(savingId);
+  return res.status(200).json(result);
 });
 
 export default router;
