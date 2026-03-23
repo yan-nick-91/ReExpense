@@ -8,26 +8,36 @@ import {
   createToGoalResponseDTO,
   updateToGoalResponseDTO,
 } from '../../mapper/GoalMapper.js';
+import { SavingQueryService } from '../queries/SavingQueryService.js';
 
 export class GoalCommandService {
   private goalRepository = AppDataSource.getRepository(Goal);
+  private savingQueryService = new SavingQueryService();
 
-  async create(userId: string, dto: GoalDTO): Promise<GoalResponseDTO> {
-    if (!dto.title) {
+  async create(dto: GoalDTO): Promise<GoalResponseDTO> {
+    const { savingId, title, description, targetAmount } = dto;
+
+    if (!savingId) {
+      throw new Error('Saving Id is missing');
+    }
+
+    if (!title) {
       throw new Error('Title is required');
     }
 
-    if (dto.targetAmount === 0.0) {
-      throw new Error('Savings should be higher than 0.0');
+    if (targetAmount <= 0.0) {
+      throw new Error('Savings must be higher than 0.0');
     }
 
-    const currentTime = new Date().toISOString();
+    const saving = await this.savingQueryService.getSavingById(savingId);
+
+    const currentDate = new Date().toISOString()
     const goal = this.goalRepository.create({
-      user: { id: userId },
-      title: dto.title,
-      description: dto.description,
-      targetAmount: dto.targetAmount,
-      createdAt: currentTime,
+      title,
+      description,
+      targetAmount,
+      saving: saving,
+      createdAt: currentDate,
     });
 
     const savedGoal = await this.goalRepository.save(goal);
@@ -35,32 +45,30 @@ export class GoalCommandService {
   }
 
   async update(
-    userId: string,
     goalId: string,
     dto: GoalDTO,
   ): Promise<GoalResponseDTO> {
+    const { title, description, targetAmount } = dto;
     const goal = await this.goalRepository.findOne({
-      where: { id: goalId, user: { id: userId } },
-      relations: ['user'],
+      where: { id: goalId, saving: { id: dto.savingId! } },
+      relations: ['saving'],
     });
 
     if (!goal) throw new NotFoundException('goal not found');
 
-    const currentTime = new Date().toISOString();
-
-    goal.title = dto.title;
-    goal.description = dto.description;
-    goal.targetAmount = dto.targetAmount;
-    goal.updatedAt = currentTime;
+    goal.title = title;
+    goal.description = description;
+    goal.targetAmount = targetAmount;
+    goal.updatedAt = new Date().toISOString();
 
     const savedGoal = await this.goalRepository.save(goal);
     return updateToGoalResponseDTO(savedGoal);
   }
 
-  async delete(userId: string, goalId: string): Promise<void> {
+  async delete(savingId: string, goalId: string): Promise<void> {
     const result = await this.goalRepository.delete({
       id: goalId,
-      user: { id: userId },
+      saving: { id: savingId },
     });
 
     if (result.affected === 0) throw new NotFoundException('Goal not found');
