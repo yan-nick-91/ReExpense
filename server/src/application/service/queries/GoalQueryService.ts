@@ -6,11 +6,11 @@ import { toGeneralGoalResponseDTO } from '../../mapper/GoalMapper.js';
 export class GoalQueryService {
   private goalRepository = AppDataSource.getRepository(Goal);
 
-  async getAllGoalsByUserId(userId: string): Promise<GoalResponseDTO[] | []> {
+  async getAllGoalsBySavingId(savingId: string): Promise<GoalResponseDTO[] | []> {
     const goals: Goal[] = await this.goalRepository
       .createQueryBuilder('goal')
-      .leftJoinAndSelect('goal.user', 'user')
-      .where('user.id = :userId', { userId })
+      .leftJoinAndSelect('goal.saving', 'saving')
+      .where('saving.id = :savingId', { savingId })
       .getMany();
     return goals.map((goal) => toGeneralGoalResponseDTO(goal));
   }
