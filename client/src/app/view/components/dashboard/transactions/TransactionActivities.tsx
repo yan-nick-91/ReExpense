@@ -6,7 +6,11 @@ import { convertDateToLocaleDate } from '../../../../utils/globalFunctions';
 import { useEffect } from 'react';
 import { getAllTransactionController } from '../../../../controllers/transactionController';
 
-export default function TransactionActivities() {
+type Props = {
+  selectedSavingId: string;
+};
+
+export default function TransactionActivities({ selectedSavingId }: Props) {
   const dispatch = useDispatch();
 
   const transactions = useSelector(
@@ -14,8 +18,8 @@ export default function TransactionActivities() {
   );
 
   useEffect(() => {
-    getAllTransactionController(dispatch);
-  }, [dispatch]);
+    getAllTransactionController(dispatch, selectedSavingId);
+  }, [dispatch, selectedSavingId]);
 
   return (
     <div className='px-4 py-2 mt-3 h-60 overflow-y-scroll'>

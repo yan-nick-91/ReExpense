@@ -15,6 +15,7 @@ type TransactionType = 'income' | 'expense';
 
 type Props = {
   transactionType: TransactionType;
+  selectedSavingId: string;
   onClose: () => void;
 };
 
@@ -30,6 +31,7 @@ type ErrorState = {
 
 export default function TransactionFormModal({
   transactionType,
+  selectedSavingId,
   onClose,
 }: Props) {
   const dispatch = useDispatch<AppDispatch>();
@@ -89,6 +91,7 @@ export default function TransactionFormModal({
 
     try {
       await createTransactionController(dispatch, {
+        savingId: selectedSavingId,
         amount: amountAsNumber,
         category: form.category,
         type: transactionType,
