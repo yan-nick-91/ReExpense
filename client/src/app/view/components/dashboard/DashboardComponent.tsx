@@ -17,11 +17,17 @@ export default function DashboardComponent() {
     (state: RootState) => state.transaction.success,
   );
 
+  const savings = useSelector((state: RootState) => state.saving.items);
+
   const [activeExpenseModal, setActiveExpenseModal] = useState<
     ExpenseModalType | undefined
   >(undefined);
 
   const [activeGoalModal, setActiveGoalModal] = useState(false);
+  const [manualSavingId, setManualSavingId] = useState<string>('');
+
+  const activeSavingId =
+    manualSavingId || (savings.length > 0 ? savings[0].id : '');
 
   useState(() => {
     document.title = 'ReExpense | Dashboard';
@@ -74,6 +80,8 @@ export default function DashboardComponent() {
             <h2 id='transaction-heading'>Transaction Manager</h2>
           </div>
           <TransactionComponent
+            selectedSavingId={activeSavingId}
+            setSelectedSavingId={setManualSavingId}
             onOpenIncomeModal={() => openExpenseModal('income')}
             onOpenOutcomeModal={() => openExpenseModal('expense')}
           />
@@ -86,7 +94,10 @@ export default function DashboardComponent() {
           <div className='bg-[#090979] text-white p-1 pl-2 text-[1.2rem] h-10'>
             <h2 id='goals-heading'>Goals</h2>
           </div>
-          <GoalComponent onOpenGoalModal={openGoalModal} />
+          <GoalComponent
+            selectedSavingId={activeSavingId}
+            onOpenGoalModal={openGoalModal}
+          />
         </section>
         <section
           id='activities-section'
@@ -96,11 +107,12 @@ export default function DashboardComponent() {
           <div className='bg-[#090979] text-white p-1 pl-2 text-[1.2rem] h-10'>
             <h2 id='activities-header'>Activities</h2>
           </div>
-          <TransactionActivities />
+          <TransactionActivities selectedSavingId={activeSavingId} />
         </section>
       </div>
       {activeExpenseModal === 'income' && (
         <TransactionFormModal
+          selectedSavingId={activeSavingId}
           transactionType={activeExpenseModal}
           onClose={closeExpenseModal}
         />
@@ -108,11 +120,17 @@ export default function DashboardComponent() {
 
       {activeExpenseModal === 'expense' && (
         <TransactionFormModal
+          selectedSavingId={activeSavingId}
           transactionType={activeExpenseModal}
           onClose={closeExpenseModal}
         />
       )}
-      {activeGoalModal && <GoalFormModal onClose={closeGoalModal} />}
+      {activeGoalModal && (
+        <GoalFormModal
+          selectedSavingId={activeSavingId}
+          onClose={closeGoalModal}
+        />
+      )}
     </div>
   );
 }
