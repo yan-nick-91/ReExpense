@@ -11,19 +11,19 @@ const goalQueryService = new GoalQueryService();
 
 router.post('/create', authMiddleware, async (req: AuthRequest, res) => {
   try {
-    const userId = req.user!.id;
     const dto: GoalDTO = req.body;
-    const result = await goalCommandService.create(userId, dto);
+    const result = await goalCommandService.create(dto);
     res.status(201).json(result);
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-router.get('/', authMiddleware, async (req: AuthRequest, res) => {
+router.get('/:savingId', authMiddleware, async (req: AuthRequest, res) => {
   try {
-    const userId = req.user!.id;
-    const result = await goalQueryService.getAllGoalsByUserId(userId);
+    const userId = req.user?.id as string
+    const savingId = req.params.savingId as string;
+    const result = await goalQueryService.getAllGoalsBySavingId(userId, savingId);
     res.status(200).json(result);
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
@@ -33,9 +33,8 @@ router.get('/', authMiddleware, async (req: AuthRequest, res) => {
 router.put('/update/:goalId', authMiddleware, async (req: AuthRequest, res) => {
   try {
     const goalId = req.params.goalId as string
-    const userId = req.user!.id;
     const dto: GoalDTO = req.body;
-    const result = await goalCommandService.update(userId, goalId, dto);
+    const result = await goalCommandService.update(goalId, dto);
     res.status(201).json(result);
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });

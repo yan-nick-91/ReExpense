@@ -31,7 +31,7 @@ const router = createBrowserRouter([
             element: <TransactionDetailPage />,
           },
           {
-            path: '/goals/:goalId',
+            path: '/goals/:savingId/:goalId',
             element: <GoalDetailPage />
           }
         ],

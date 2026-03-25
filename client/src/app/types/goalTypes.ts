@@ -1,4 +1,5 @@
 export type Goal = {
+  savingId: string;
   title: string;
   description: string;
   targetAmount: number;

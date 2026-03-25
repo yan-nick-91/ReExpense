@@ -1,20 +1,19 @@
 import {
   Column,
   Entity,
-  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from './User.js';
+import { Saving } from './Saving.js';
 
 @Entity('goals')
 export class Goal {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @ManyToOne(() => User, (user) => user.goals)
-  @JoinColumn({ name: 'user_id' })
-  user!: User;
+  @ManyToOne(() => Saving, (saving) => saving.goals)
+  saving!: Saving;
 
   @Column({ type: 'varchar', length: 255 })
   title!: string;
@@ -27,20 +26,12 @@ export class Goal {
 
   @Column({
     type: 'datetime',
-    transformer: {
-      to: (value: string | Date) => value,
-      from: (value: Date) => value.toISOString(),
-    },
   })
   createdAt!: string;
 
   @Column({
     type: 'datetime',
     nullable: true,
-    transformer: {
-      to: (value: string | Date) => value,
-      from: (value: Date | null) => value?.toISOString() || null,
-    },
   })
   updatedAt?: string;
 }

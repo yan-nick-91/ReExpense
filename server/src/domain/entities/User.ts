@@ -1,6 +1,4 @@
-import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Transaction } from './Transaction.js';
-import { Goal } from './Goal.js';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Saving } from './Saving.js';
 
 @Entity('users')
@@ -22,10 +20,4 @@ export class User {
 
   @OneToMany(() => Saving, (saving) => saving.user)
   savings!: Saving[];
-
-  @OneToMany(() => Transaction, (transaction) => transaction.user)
-  transactions!: Transaction[];
-
-  @OneToMany(() => Goal, (goal) => goal.user)
-  goals!: Goal[];
 }

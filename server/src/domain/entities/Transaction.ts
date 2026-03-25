@@ -5,7 +5,6 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { User } from './User.js';
 import { Saving } from './Saving.js';
 
 export enum TransactionType {
@@ -17,10 +16,6 @@ export enum TransactionType {
 export class Transaction {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
-
-  @ManyToOne(() => User, (user) => user.transactions)
-  @JoinColumn({ name: 'user_id' })
-  user!: User;
 
   @ManyToOne(() => Saving, (saving) => saving.transactions)
   @JoinColumn({ name: 'saving_id' })
@@ -38,11 +33,7 @@ export class Transaction {
   type!: TransactionType;
 
   @Column({
-    type: 'datetime',
-    transformer: {
-      to: (value: string | Date) => value,
-      from: (value: Date) => value.toISOString(),
-    },
+    type: 'text',
   })
   date!: string;
 }

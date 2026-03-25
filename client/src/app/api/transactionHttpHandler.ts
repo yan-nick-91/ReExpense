@@ -5,43 +5,55 @@ import { API_URL } from './config';
 
 export const createTransaction = createAsyncThunk<
   Transaction,
-  { amount: number; category: string; type: TransactionType }
->('/transactions/create', async (payload) => {
-  const token = sessionStorage.getItem('token');
-
-  const res = await axios.post<Transaction>(
-    `${API_URL}/transactions/create`,
-    payload,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  );
-  return res.data;
-});
-
-export const getAllTransaction = createAsyncThunk<
-  Transaction[],
-  void,
+  { amount: number; category: string; type: TransactionType },
   { rejectValue: string }
->('/transactions', async (_, { rejectWithValue }) => {
+>('/transactions/create', async (payload, { rejectWithValue }) => {
   const token = sessionStorage.getItem('token');
 
   if (!token) {
-    return rejectWithValue('NO_TOKEN');
+    return rejectWithValue("No token")
   }
 
   try {
-    const res = await axios.get<{ userTransactions: Transaction[] }>(
-      `${API_URL}/transactions`,
+    const res = await axios.post<Transaction>(
+      `${API_URL}/transactions/create`,
+      payload,
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       },
     );
-    return res.data.userTransactions;
+    return res.data;
+  } catch (err) {
+    const axiosError = err as AxiosError<{ error: string }>;
+    return rejectWithValue(
+      axiosError.response?.data.error || 'Failed to fullfil the process',
+    );
+  }
+});
+
+export const getAllTransaction = createAsyncThunk<
+  Transaction[],
+  string,
+  { rejectValue: string }
+>('/transactions', async (savingId, { rejectWithValue }) => {
+  const token = sessionStorage.getItem('token');
+
+  if (!token) {
+    return rejectWithValue('No token');
+  }
+
+  try {
+    const res = await axios.get<Transaction[]>(
+      `${API_URL}/transactions/${savingId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return res.data;
   } catch (err) {
     const axiosError = err as AxiosError<{ error: string }>;
     return rejectWithValue(

@@ -17,3 +17,9 @@ export class NotFoundException extends AppException {
     super(message);
   }
 }
+
+export class RequestSchemaException extends AppException {
+  constructor(message: string) {
+    super(message)
+  }
+}

@@ -1,28 +1,35 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Button from '../../../UI/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../../../store/store';
 import { getAllSavingBalanceController } from '../../../../controllers/savingController';
 
 type Props = {
+  selectedSavingId: string;
+  setSelectedSavingId: (id: string) => void;
   onOpenIncomeModal: () => void;
   onOpenOutcomeModal: () => void;
 };
 
 export default function TransactionComponent({
+  selectedSavingId,
+  setSelectedSavingId,
   onOpenIncomeModal,
   onOpenOutcomeModal,
 }: Props) {
   const dispatch = useDispatch<AppDispatch>();
   const savings = useSelector((state: RootState) => state.saving.items);
-  const [selectedSavingId, setSelectedSavingId] = useState<string>('');
 
   useEffect(() => {
     getAllSavingBalanceController(dispatch);
   }, [dispatch]);
 
-  const selectedSaving =
-    savings.find((saving) => saving.id === selectedSavingId) || savings[0];
+  const effectiveSelectedSaving =
+    selectedSavingId || (savings.length > 0 ? savings[0].id : '');
+
+  const selectedSaving = savings.find(
+    (saving) => saving.id === effectiveSelectedSaving,
+  );
 
   const currentAmount = selectedSaving ? selectedSaving.balance : 0;
 
