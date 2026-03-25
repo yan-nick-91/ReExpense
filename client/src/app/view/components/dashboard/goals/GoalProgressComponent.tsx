@@ -1,31 +1,21 @@
-import Button from '../../../UI/Button';
-// import ProgressCircle from '../../../UI/ProgressCircle';
-// import { useSelector } from 'react-redux';
-// import type { RootState } from '../../../../store/store';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../../../store/store';
+import ProgressCircle from '../../../UI/ProgressCircle';
 
 type Props = {
-  onOpenModal: () => void;
   goalId: string;
-  goalPrice: number;
 };
 
-export default function GoalProgressComponent({
-  onOpenModal,
-  goalId,
-  goalPrice,
-}: Props) {
-  console.log(goalId)
-  // const goals = useSelector((state: RootState) =>
-  //   state.goal.items
-  // );
+export default function GoalProgressComponent({ goalId }: Props) {
+  const goals = useSelector((state: RootState) => state.goal.items);
+  const saving = useSelector((state: RootState) => state.saving.item);
+  const loading = useSelector((state: RootState) => state.saving.loading);
 
-  // const savingsGoal = goalPrice ?? 0;
-  // // const totalSavings = ;
-
-  // const progressPercentage = Math.min(
-  //   Math.max(Math.round((totalSavings / savingsGoal) * 100 * 100) / 100, 0),
-  //   100,
-  // );
+  const getGoalTargetAmount = () => {
+    const goal = goals.find((g) => g.id === goalId);
+    if (!goal) return 0.0;
+    return goal.targetAmount;
+  };
 
   const rowDisplay = (label: string, goalProp: number) => {
     return (
@@ -35,15 +25,33 @@ export default function GoalProgressComponent({
       </div>
     );
   };
+
+  if (loading || saving === undefined) {
+    return <p>Loading progress...</p>;
+  }
+
+  if (!saving) {
+    return <p>No Saving found...</p>;
+  }
+
+  const progressPercentage = Math.min(
+    Math.max(
+      Math.round((saving.balance / getGoalTargetAmount()) * 100 * 100) / 100,
+      0,
+    ),
+    100,
+  );
+
   return (
     <>
       <h2>Progress</h2>
-      {rowDisplay('Savings goal', goalPrice)}
-      {/* {rowDisplay('Savings in amount', totalSavings)} */}
-      {/* <ProgressCircle percentage={progressPercentage} /> */}
-      <Button theme='primary' onClick={onOpenModal}>
-        Add savings
-      </Button>
+      {rowDisplay('Target amount for goal', getGoalTargetAmount())}
+      {rowDisplay(`Amount in ${saving.name}`, saving.balance ?? 0.0)}
+      <div className='flex justify-center sm:mt-10'>
+        <div className='max-w-80 sm:mt-10 lg:max-w-220'>
+          <ProgressCircle percentage={progressPercentage} />
+        </div>
+      </div>
     </>
   );
 }
