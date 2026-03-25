@@ -19,10 +19,11 @@ router.post('/create', authMiddleware, async (req: AuthRequest, res) => {
   }
 });
 
-router.get('/', authMiddleware, async (req: AuthRequest, res) => {
+router.get('/:savingId', authMiddleware, async (req: AuthRequest, res) => {
   try {
-    const { savingId } = req.body;
-    const result = await goalQueryService.getAllGoalsBySavingId(savingId);
+    const userId = req.user?.id as string
+    const savingId = req.params.savingId as string;
+    const result = await goalQueryService.getAllGoalsBySavingId(userId, savingId);
     res.status(200).json(result);
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
