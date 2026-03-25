@@ -9,12 +9,17 @@ import {
 import Button from '../../../UI/Button';
 import GoalItem from './GoalItem';
 import GoalFormModal from './GoalFormModal';
+import GoalProgressComponent from './GoalProgressComponent';
 import clsx from 'clsx';
+import { getSavingByIdController } from '../../../../controllers/savingController';
 
 export default function GoalDetailComponent() {
-  const { goalId } = useParams<{ goalId: string }>();
+  const { savingId, goalId } = useParams<{
+    savingId: string;
+    goalId: string;
+  }>();
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const goal = useSelector((state: RootState) =>
     state.goal.items.find((g) => g.id === goalId),
@@ -24,23 +29,24 @@ export default function GoalDetailComponent() {
   const [deleteWarningModal, setDeleteWarningModal] = useState(false);
 
   useEffect(() => {
-    if (!goal) {
-      getAllGoalsController(dispatch);
-    }
-  }, [dispatch, goal]);
+    if (!savingId) return;
+    getAllGoalsController(dispatch, savingId);
+    getSavingByIdController(dispatch, savingId);
+  }, [dispatch, savingId]);
 
   useEffect(() => {
+    if (!goal) return;
     document.title = `ReExpense | Goal item: ${goal?.title}-${goal?.id.split('-')[0]}`;
-  });
+  }, [goal]);
 
   const proceedDeletion = async () => {
     try {
       await deleteGoalController(dispatch, goal!.id);
-      navigate('/')
+      navigate('/');
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
   if (!goal) {
     return (
@@ -51,12 +57,18 @@ export default function GoalDetailComponent() {
     );
   }
 
+  if (!savingId) {
+    return <p>Missing saving context</p>;
+  }
+
   return (
     <>
       <section className='flex justify-center h-screen'>
-        <div className='flex justify-items-start border w-[90%] p-4'>
+        <div className='flex justify-items-start flex-col lg:flex-row border w-[90%] p-4 gap-8'>
           <article className='flex flex-col'>
-            <h1 id='main-content' className='text-xl'>{goal.title}</h1>
+            <h1 id='main-content' className='text-xl'>
+              {goal.title}
+            </h1>
             <div className='border border-gray-400' />
             <GoalItem goal={goal} />
             <div className='border border-gray-400' />
@@ -64,15 +76,22 @@ export default function GoalDetailComponent() {
               <Button theme='primary' onClick={() => setActiveGoalModal(true)}>
                 Edit goal
               </Button>
-              <Button theme='danger' onClick={() => setDeleteWarningModal(true)}>
+              <Button
+                theme='danger'
+                onClick={() => setDeleteWarningModal(true)}
+              >
                 Delete goal
               </Button>
             </div>
           </article>
+          <div>
+            <GoalProgressComponent goalId={goal.id} />
+          </div>
         </div>
       </section>
       {activeGoalModal && (
         <GoalFormModal
+          selectedSavingId={savingId}
           onClose={() => setActiveGoalModal(false)}
           editGoal={goal}
           modalPurpose='edit'
