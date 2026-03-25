@@ -29,9 +29,9 @@ export class GoalCommandService {
       throw new Error('Savings must be higher than 0.0');
     }
 
-    const saving = await this.savingQueryService.getSavingById(savingId);
+    const saving = await this.savingQueryService.getSavingBySavingId(savingId);
 
-    const currentDate = new Date().toISOString()
+    const currentDate = new Date().toISOString();
     const goal = this.goalRepository.create({
       title,
       description,
@@ -44,10 +44,7 @@ export class GoalCommandService {
     return createToGoalResponseDTO(savedGoal);
   }
 
-  async update(
-    goalId: string,
-    dto: GoalDTO,
-  ): Promise<GoalResponseDTO> {
+  async update(goalId: string, dto: GoalDTO): Promise<GoalResponseDTO> {
     const { title, description, targetAmount } = dto;
     const goal = await this.goalRepository.findOne({
       where: { id: goalId, saving: { id: dto.savingId! } },
@@ -65,12 +62,23 @@ export class GoalCommandService {
     return updateToGoalResponseDTO(savedGoal);
   }
 
-  async delete(savingId: string, goalId: string): Promise<void> {
-    const result = await this.goalRepository.delete({
-      id: goalId,
-      saving: { id: savingId },
+  async delete(userId: string, goalId: string): Promise<void> {
+    const goal = await this.goalRepository.findOne({
+      where: {
+        id: goalId,
+        saving: {
+          user: {
+            id: userId,
+          },
+        },
+      },
+      relations: ['saving', 'saving.user'],
     });
 
-    if (result.affected === 0) throw new NotFoundException('Goal not found');
+    if (!goal) {
+      throw new NotFoundException('Goal not found');
+    }
+
+    await this.goalRepository.remove(goal);
   }
 }
