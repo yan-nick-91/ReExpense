@@ -48,7 +48,7 @@ export class TransactionCommandService {
       );
     }
 
-    const saving = await this.savingQueryService.getSavingById(dto.savingId);
+    const saving = await this.savingQueryService.getSavingBySavingId(dto.savingId);
 
     const currentDate = new Date().toISOString()
     const transaction = this.transactionRepository.create({
