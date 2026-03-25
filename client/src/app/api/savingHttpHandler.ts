@@ -27,4 +27,26 @@ export const getAllSavingBalances = createAsyncThunk<
   }
 });
 
+export const requestSpecificSavingBySavingId = createAsyncThunk<
+  Saving,
+  string,
+  { rejectValue: string }
+>('/saving', async (savingId, { rejectWithValue }) => {
+  const token = sessionStorage.getItem('token');
+
+  try {
+    const res = await axios.get<Saving>(`${API_URL}/savings/${savingId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data;
+  } catch (err) {
+    const axiosError = err as AxiosError<{ error: string }>;
+    return rejectWithValue(
+      axiosError.response?.data.error || 'Failed to get savings',
+    );
+  }
+});
+
 // export const currentSavingBalanceBySavingId = createAsyncThunk<Saving, void, {rejectValue: string}>('')
