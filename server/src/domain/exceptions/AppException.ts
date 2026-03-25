@@ -1,4 +1,4 @@
-export default abstract class extends Error {
+export default abstract class AppException extends Error {
   constructor(message: string) {
     super(message);
     Object.setPrototypeOf(this, new.target.prototype);

@@ -15,8 +15,12 @@ export const createGoalController = async (
   dispatch(createGoal(data)).unwrap();
 };
 
-export const getAllGoalsController = async (dispatch: AppDispatch) => {
-  dispatch(getAllGoals()).unwrap();
+export const getAllGoalsController = async (
+  dispatch: AppDispatch,
+  savingId: string,
+) => {
+  if (!savingId) return
+  dispatch(getAllGoals(savingId)).unwrap();
 };
 
 export const updateGoalController = async (

@@ -21,9 +21,9 @@ export const createGoal = createAsyncThunk<GoalGeneral, Goal>(
 
 export const getAllGoals = createAsyncThunk<
   GoalGeneral[],
-  void,
+  string,
   { rejectValue: string }
->('/goals', async (_, { rejectWithValue }) => {
+>('/goals', async (savingId, { rejectWithValue }) => {
   const token = sessionStorage.getItem('token');
 
   if (!token) {
@@ -31,7 +31,7 @@ export const getAllGoals = createAsyncThunk<
   }
 
   try {
-    const res = await axios.get<GoalGeneral[]>(`${API_URL}/goals`, {
+    const res = await axios.get<GoalGeneral[]>(`${API_URL}/goals/${savingId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 

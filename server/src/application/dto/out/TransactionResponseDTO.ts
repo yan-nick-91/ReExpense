@@ -2,7 +2,7 @@ type TransactionType = 'income' | 'expense'
 
 export interface TransactionResponseDTO {
       id: string;
-      userId: string;
+      savingId: string;
       amount: number;
       category: string;
       type: TransactionType;

@@ -1,9 +1,9 @@
 export interface GoalResponseDTO {
   id?: string;
-  userId: string;
+  savingId: string;
   title: string;
   description: string;
-  price: number;
+  targetAmount: number;
   createdAt?: string;
-  updatedAt?: string;
+  updatedAt?: string | null;
 }

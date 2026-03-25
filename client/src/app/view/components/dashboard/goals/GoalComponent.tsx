@@ -7,16 +7,17 @@ import { getAllGoalsController } from '../../../../controllers/goalController';
 import { convertToDateAndTimeDisplay } from '../../../../utils/globalFunctions';
 
 type Props = {
+  selectedSavingId: string;
   onOpenGoalModal: () => void;
 };
 
-export default function GoalsComponent({ onOpenGoalModal }: Props) {
+export default function GoalsComponent({ onOpenGoalModal, selectedSavingId }: Props) {
   const dispatch = useDispatch();
   const goals = useSelector((state: RootState) => state.goal.items);
 
   useEffect(() => {
-    getAllGoalsController(dispatch);
-  }, [dispatch]);
+    getAllGoalsController(dispatch, selectedSavingId);
+  }, [dispatch, selectedSavingId]);
 
   const itemDateDisplay = (label: string, dateValue: string) => {
     return (
@@ -57,14 +58,14 @@ export default function GoalsComponent({ onOpenGoalModal }: Props) {
                     {goal.updatedAt &&
                       itemDateDisplay('Updated at', goal.updatedAt)}
 
-                    {itemDetailDisplay('Price', String(goal.price))}
+                    {itemDetailDisplay('Target amount', String(goal.targetAmount))}
                     {itemDetailDisplay(
                       'Description',
                       goal.description || 'No Details',
                     )}
                   </div>
                   <div className='flex lg:justify-end'>
-                    <Button navigateTo={`/goals/${goal.id}`} theme='primary'>
+                    <Button navigateTo={`/goals/${goal.savingId}/${goal.id}`} theme='primary'>
                       View goal
                     </Button>
                   </div>

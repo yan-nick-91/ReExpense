@@ -16,6 +16,7 @@ import Button from '../../../UI/Button';
 type Props = {
   onClose: () => void;
   modalPurpose?: ModalPurpose;
+  selectedSavingId: string;
   editGoal?: UpdateGoal;
 };
 
@@ -40,6 +41,7 @@ type ModalPurpose = 'create' | 'edit';
 export default function GoalFormModal({
   onClose,
   modalPurpose = 'create',
+  selectedSavingId,
   editGoal,
 }: Props) {
   const dispatch = useDispatch();
@@ -55,7 +57,7 @@ export default function GoalFormModal({
           id: editGoal.id,
           title: editGoal.title,
           description: editGoal.description,
-          price: String(editGoal.price),
+          price: String(editGoal.targetAmount),
         }
       : { id: '', title: '', description: '', price: '' },
   );
@@ -106,16 +108,18 @@ export default function GoalFormModal({
     try {
       if (modalPurpose === 'create') {
         createGoalController(dispatch, {
+          savingId: selectedSavingId,
           title: form.title,
           description: form.description,
-          price: priceAsNumber,
+          targetAmount: priceAsNumber,
         });
       } else {
         updateGoalController(dispatch, {
           id: editGoal!.id,
+          savingId: selectedSavingId,
           title: editForm.title,
           description: editForm.description,
-          price: priceAsNumber,
+          targetAmount: priceAsNumber,
         });
       }
     } catch (err) {

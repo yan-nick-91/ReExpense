@@ -1,6 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Transaction } from './Transaction.js';
-import { Goal } from './Goal.js';
+import { Saving } from './Saving.js';
 
 @Entity('users')
 export class User {
@@ -19,9 +18,6 @@ export class User {
   @Column({ type: 'datetime', nullable: true })
   passwordResetExpires?: Date | null;
 
-  @OneToMany(() => Transaction, (transaction) => transaction.user)
-  transactions!: Transaction[];
-
-  @OneToMany(() => Goal, (goal) => goal.user)
-  goals!: Goal[];
+  @OneToMany(() => Saving, (saving) => saving.user)
+  savings!: Saving[];
 }

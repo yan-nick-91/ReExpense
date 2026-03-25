@@ -5,17 +5,20 @@ import type { TransactionResponseDTO } from './../../dto/out/TransactionResponse
 export class TransactionQueryService {
   private transactionRepository = AppDataSource.getRepository(Transaction);
 
-  async getAllTransactionByUserId(
+  async getAllTransactionBySavingId(
     userId: string,
+    savingId: string,
   ): Promise<TransactionResponseDTO[] | []> {
-    const transactions: Transaction[] = await this.transactionRepository.find({
-      where: { user: { id: userId } },
-      relations: ['user']
-    });
-
+    const transactions: Transaction[] = await this.transactionRepository
+      .createQueryBuilder('transaction')
+      .leftJoinAndSelect('transaction.saving', 'saving')
+      .leftJoin('saving.user', 'user')
+      .where('saving.id = :savingId', { savingId })
+      .andWhere('user.id = :userId', { userId })
+      .getMany();
     return transactions.map((t) => ({
       id: t.id,
-      userId: t.user.id,
+      savingId: savingId,
       amount: t.amount,
       category: t.category,
       type: t.type,

@@ -1,5 +1,6 @@
 export interface GoalDTO {
+    savingId?: string,
     title: string,
     description: string,
-    price: number,
+    targetAmount: number,
 }
