@@ -49,7 +49,10 @@ export default function GoalProgressComponent({ goalId }: Props) {
       {rowDisplay(`Amount in ${saving.name}`, saving.balance ?? 0.0)}
       <div className='flex justify-center sm:mt-10'>
         <div className='max-w-80 sm:mt-10 lg:max-w-220'>
-          <ProgressCircle percentage={progressPercentage} />
+          <ProgressCircle
+            percentage={progressPercentage}
+            title={`Circle percentage for goal is on ${progressPercentage}%`}
+          />
         </div>
       </div>
     </>
