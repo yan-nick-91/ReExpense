@@ -9,6 +9,7 @@ type Props = {
   setSelectedSavingId: (id: string) => void;
   onOpenIncomeModal: () => void;
   onOpenOutcomeModal: () => void;
+  openSavingModal: () => void;
 };
 
 export default function TransactionComponent({
@@ -16,6 +17,7 @@ export default function TransactionComponent({
   setSelectedSavingId,
   onOpenIncomeModal,
   onOpenOutcomeModal,
+  openSavingModal,
 }: Props) {
   const dispatch = useDispatch<AppDispatch>();
   const savings = useSelector((state: RootState) => state.saving.items);
@@ -49,6 +51,15 @@ export default function TransactionComponent({
               </option>
             ))}
           </select>
+          <div className='flex justify-end mt-2'>
+            <Button
+              theme='primary'
+              className='w-auto'
+              onClick={openSavingModal}
+            >
+              Add new saving
+            </Button>
+          </div>
         </div>
       </div>
       <div className='border border-gray-400 mb-4' />
