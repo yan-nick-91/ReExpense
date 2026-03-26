@@ -25,13 +25,18 @@ export default function Navbar() {
     >
       <div className='flex justify-between'>
         <div className='pl-12 w-[10%] flex justify-between'>
-          <NavLink to='/' className='p-4 px-4 hover:bg-blue-500 text-[1.2rem]'>
-            Home
+          <NavLink
+            to='/'
+            className='p-4 px-4 hover:bg-blue-500 text-[1.2rem]'
+            aria-label={isAuthenticated ? 'Go to dashboard' : 'Go to main page'}
+          >
+            ReExpense
           </NavLink>
           {isAuthenticated && (
             <NavLink
               to='/settings'
               className='p-4 px-4 hover:bg-blue-500 text-[1.2rem]'
+              aria-label='Go to settings'
             >
               Setting
             </NavLink>
@@ -42,6 +47,7 @@ export default function Navbar() {
             <Button
               className='p-4 px-4 hover:bg-blue-500 text-[1.2rem] cursor-pointer'
               onClick={logout}
+              ariaLabel='Logout and go to main page'
             >
               Logout
             </Button>
