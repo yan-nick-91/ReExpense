@@ -9,6 +9,8 @@ import TransactionActivities from './transactions/TransactionActivities';
 import GoalComponent from './goals/GoalComponent';
 import GoalFormModal from './goals/GoalFormModal';
 import { useRegisterSkipLinks } from '../../../hooks/skipLinkHooks';
+import clsx from 'clsx';
+import Button from '../../UI/Button';
 
 type ExpenseModalType = 'income' | 'expense';
 
@@ -25,6 +27,7 @@ export default function DashboardComponent() {
 
   const [activeGoalModal, setActiveGoalModal] = useState(false);
   const [manualSavingId, setManualSavingId] = useState<string>('');
+  const [activeSavingModal, setActiveSavingModal] = useState(false);
 
   const activeSavingId =
     manualSavingId || (savings.length > 0 ? savings[0].id : '');
@@ -52,6 +55,8 @@ export default function DashboardComponent() {
   const closeExpenseModal = () => setActiveExpenseModal(undefined);
 
   const closeGoalModal = () => setActiveGoalModal(false);
+
+  const openCreateSavingModal = () => setActiveSavingModal(true);
 
   return (
     <div className='grid lg:grid-cols-2 w-[90%] m-auto sm:grid-cols-1'>
@@ -84,6 +89,7 @@ export default function DashboardComponent() {
             setSelectedSavingId={setManualSavingId}
             onOpenIncomeModal={() => openExpenseModal('income')}
             onOpenOutcomeModal={() => openExpenseModal('expense')}
+            openSavingModal={openCreateSavingModal}
           />
         </section>
         <section
@@ -130,6 +136,20 @@ export default function DashboardComponent() {
           selectedSavingId={activeSavingId}
           onClose={closeGoalModal}
         />
+      )}
+      {activeSavingModal && (
+        <section
+          className={clsx(
+            'fixed inset-0 flex items-center justify-center bg-[#1b1b1bbd] bg-opacity-50',
+          )}
+        >
+          <form className='bg-white p-4 rounded-[0.2rem] shadow-lg w-200'>
+            test
+            <Button theme='primary' onClick={() => setActiveSavingModal(false)}>
+              Close form
+            </Button>
+          </form>
+        </section>
       )}
     </div>
   );
