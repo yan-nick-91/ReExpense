@@ -10,6 +10,7 @@ type Props = {
   type?: 'button' | 'submit' | 'reset';
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
+  ariaLabel?: string;
 };
 
 const themeClasses: Record<NonNullable<Props['theme']>, string> = {
@@ -33,6 +34,7 @@ export default function Button({
   type,
   onClick,
   disabled = false,
+  ariaLabel,
 }: Props) {
   const disabledClasses = 'opacity-50 cursor-not-allowed pointer-events-none';
 
@@ -51,6 +53,7 @@ export default function Button({
       <NavLink
         className={theme === 'default' ? className : baseClasses}
         to={`${navigateTo!}`}
+        {...(ariaLabel ? { 'aria-label': ariaLabel } : {})}
       >
         {children}
       </NavLink>
@@ -62,6 +65,7 @@ export default function Button({
       className={theme === 'default' ? className : baseClasses}
       type={type ?? 'button'}
       onClick={(e) => onClick?.(e)}
+      {...(ariaLabel ? { 'aria-label': ariaLabel } : {})}
     >
       {children}
     </button>
