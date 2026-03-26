@@ -91,16 +91,16 @@ export default function SettingsComponent() {
             <div className='flex flex-col mt-2'>
               <h2 className='mt-4 mb-2'>Update password</h2>
               <div className='border border-b-gray-400 mb-4' />
-              <label htmlFor='update current password' className='mb-2'>
+              <label htmlFor='update-current-password' className='mb-2'>
                 Current password
               </label>
               <input
-                id='update current password'
+                id='update-current-password'
                 type='password'
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 className='border border-gray-600 rounded-[0.2rem] p-2'
-                autoComplete='no'
+                autoComplete='update-current-password'
                 aria-invalid={!!currentPasswordError}
                 aria-describedby={
                   currentPasswordError ? 'current-password-error' : undefined
@@ -113,16 +113,16 @@ export default function SettingsComponent() {
               )}
             </div>
             <div className='flex flex-col mt-2'>
-              <label htmlFor='new password' className='mb-2'>
+              <label htmlFor='new-password' className='mb-2'>
                 New password
               </label>
               <input
-                id='new password'
+                id='new-password'
                 type='password'
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 className='border border-gray-600 rounded-[0.2rem] p-2'
-                autoComplete='no'
+                autoComplete='new-password'
                 aria-invalid={!!newPasswordError}
                 aria-describedby={
                   newPasswordError ? 'new-password-error' : undefined
@@ -135,16 +135,16 @@ export default function SettingsComponent() {
               )}
             </div>
             <div className='flex flex-col mt-2 mb-8'>
-              <label htmlFor='confirm new password' className='mb-2'>
+              <label htmlFor='confirm-new-password' className='mb-2'>
                 Confirm new password
               </label>
               <input
-                id='confirm new password'
+                id='confirm-new-password'
                 type='password'
                 value={confirmNewPassword}
                 onChange={(e) => setNewConfirmPassword(e.target.value)}
                 className='border border-gray-600 rounded-[0.2rem] p-2'
-                autoComplete='no'
+                autoComplete='confirm-new-password'
                 aria-invalid={!!confirmedNewPasswordError}
                 aria-describedby={
                   confirmedNewPasswordError
