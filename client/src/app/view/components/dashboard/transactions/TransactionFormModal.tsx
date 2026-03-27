@@ -58,6 +58,27 @@ export default function TransactionFormModal({
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
+    if (name === 'amount') {
+      let cleanedValue = value
+        .replace(/[^0-9.]/g, '')
+        .replace(/(\..)\./g, '$1');
+
+      if (cleanedValue.startsWith('.')) {
+        cleanedValue = cleanedValue.slice(1);
+      }
+
+      if (cleanedValue.includes('.')) {
+        const [integer, decimals] = cleanedValue.split('.');
+        cleanedValue = integer + '.' + decimals.slice(0, 2);
+      }
+
+      setForm((prev) => ({
+        ...prev,
+        amount: cleanedValue,
+      }));
+      return;
+    }
+
     setForm((prev) => ({
       ...prev,
       [name]: value,
@@ -123,7 +144,7 @@ export default function TransactionFormModal({
             labelId='amount'
             labelText='Amount'
             name='amount'
-            type='number'
+            type='text'
             value={form.amount}
             onChange={handleChange}
           />
