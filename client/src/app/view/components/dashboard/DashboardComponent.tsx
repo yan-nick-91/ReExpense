@@ -9,8 +9,7 @@ import TransactionActivities from './transactions/TransactionActivities';
 import GoalComponent from './goals/GoalComponent';
 import GoalFormModal from './goals/GoalFormModal';
 import { useRegisterSkipLinks } from '../../../hooks/skipLinkHooks';
-import clsx from 'clsx';
-import Button from '../../UI/Button';
+import SavingFormModal from './savings/SavingFormModal';
 
 type ExpenseModalType = 'income' | 'expense';
 
@@ -138,18 +137,9 @@ export default function DashboardComponent() {
         />
       )}
       {activeSavingModal && (
-        <section
-          className={clsx(
-            'fixed inset-0 flex items-center justify-center bg-[#1b1b1bbd] bg-opacity-50',
-          )}
-        >
-          <form className='bg-white p-4 rounded-[0.2rem] shadow-lg w-200'>
-            test
-            <Button theme='primary' onClick={() => setActiveSavingModal(false)}>
-              Close form
-            </Button>
-          </form>
-        </section>
+        <SavingFormModal
+          closeSavingModal={() => setActiveSavingModal(false)}
+        />
       )}
     </div>
   );
