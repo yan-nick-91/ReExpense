@@ -20,6 +20,18 @@ export class NotFoundException extends AppException {
 
 export class RequestSchemaException extends AppException {
   constructor(message: string) {
+    super(message);
+  }
+}
+
+export class AlreadyExistsException extends AppException {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+export class IllegalRequestException extends AppException {
+  constructor(message: string) {
     super(message)
   }
 }
