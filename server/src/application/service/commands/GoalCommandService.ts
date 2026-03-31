@@ -51,7 +51,7 @@ export class GoalCommandService {
       relations: ['saving'],
     });
 
-    if (!goal) throw new NotFoundException('goal not found');
+    if (!goal) throw new NotFoundException('Goal not found');
 
     goal.title = title;
     goal.description = description;
