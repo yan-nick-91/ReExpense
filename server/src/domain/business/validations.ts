@@ -5,6 +5,7 @@ import {
   InvalidEmailException,
   InvalidPasswordLengthException,
 } from '../exceptions/AuthenticationExceptions.js';
+import { NotFoundException } from '../exceptions/GeneralExceptions.js';
 
 export const isValidEmail = (email: string) => {
   const EMAIL_REGEX = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
@@ -29,15 +30,20 @@ export const emailAlreadyTaken = (existingUser: User | null) => {
 };
 
 export const verifyFoundUser = (user: User | null, errorMessage: string) => {
-  if (!user) throw new InvalidCredentialsException(errorMessage);
+  if (!user) throw new NotFoundException(errorMessage);
 };
 
 export const verifyPassword = (isValid: boolean) => {
   if (!isValid) throw new InvalidCredentialsException('Invalid credentials');
 };
 
-export const verifyPasswordEquals = (currentPassword: string, newPassword: string) => {
+export const verifyPasswordEquals = (
+  currentPassword: string,
+  newPassword: string,
+) => {
   if (currentPassword === newPassword) {
-    throw new InvalidCredentialsException('New password cannot be equals as the current password')
+    throw new InvalidCredentialsException(
+      'New password cannot be equals as the current password',
+    );
   }
-}
+};
