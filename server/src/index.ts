@@ -7,6 +7,7 @@ import goalRoutes from './presentation/routes/goal.routes.js'
 import savingRoutes from './presentation/routes/saving.routes.js'
 import transactionRoutes from './presentation/routes/transaction.route.js';
 import { AppDataSource } from './infrastructure/database/data-source.js';
+import { globalErrorHandler } from './presentation/middleware/global.exceptions.js';
 
 dotenv.config();
 
@@ -28,6 +29,8 @@ app.use(
   app.use('/api/savings',  savingRoutes)
   app.use('/api/transactions', transactionRoutes);
 
+  app.use(globalErrorHandler)
+  
   app.get('/', (_req, res) => {
     res.json({ message: 'App is running 🚀' });
   });
