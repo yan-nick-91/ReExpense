@@ -4,8 +4,6 @@ import {
   Transaction,
   TransactionType,
 } from '../../../domain/entities/Transaction.js';
-import { User } from '../../../domain/entities/User.js';
-
 import type { CreateTransactionDTO } from '../../dto/in/CreateTransactionDTO.js';
 import type { TransactionResponseDTO } from './../../dto/out/TransactionResponseDTO.js';
 import { SavingCommandService } from './SavingCommandService.js';
@@ -38,7 +36,7 @@ export class TransactionCommandService {
 
     if (category === '' || (type !== 'income' && type !== 'expense')) {
       throw new RequiredFieldMissingValueException(
-        'Not all fields contains a value',
+        'Not all required fields are containing a value',
       );
     }
 
@@ -48,15 +46,17 @@ export class TransactionCommandService {
       );
     }
 
-    const saving = await this.savingQueryService.getSavingBySavingId(dto.savingId);
+    const saving = await this.savingQueryService.getSavingBySavingId(
+      dto.savingId,
+    );
 
-    const currentDate = new Date().toISOString()
+    const currentDate = new Date().toISOString();
     const transaction = this.transactionRepository.create({
       saving: saving,
       amount,
       category,
       type: type as TransactionType,
-      date: currentDate
+      date: currentDate,
     });
 
     const savedTransaction = await this.transactionRepository.save(transaction);
