@@ -56,8 +56,8 @@ export class AuthCommandService {
   async login(dto: AuthUserDTO): Promise<UserTokenResponseDTO> {
     const { email, password } = dto;
     const user = await this.userRepository.findOne({ where: { email } });
-    verifyFoundUser(user, 'Invalid credentials');
-
+    if (!user) throw new InvalidCredentialsException('Invalid credentials')
+      
     const isValid = await bcrypt.compare(password, user!.password);
     if (!isValid) throw new InvalidCredentialsException('Invalid credentials');
 
