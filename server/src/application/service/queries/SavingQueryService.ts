@@ -19,7 +19,9 @@ export class SavingQueryService {
   }
 
   async getSavingBySavingId(savingId: string) {
-    const saving = await this.getRepository.findOne({ where: { id: savingId}})
+    const saving = await this.getRepository.findOne({
+      where: { id: savingId },
+    });
     if (!saving) throw new NotFoundException('Saving not found');
     return saving;
   }
