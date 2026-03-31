@@ -7,86 +7,83 @@ import { type AuthRequest } from '../../types/authTypes.js';
 import type { AuthUserDTO } from '../../application/dto/in/AuthUserDTO.js';
 import type { AuthUpdatePasswordDTO } from './../../application/dto/in/AuthUpdatePasswordDTO.js';
 import type { ResetPasswordRequestDTO } from './../../application/dto/in/ResetPasswordRequestDTO.js';
-import {
-  EmailAlreadyUsedException,
-  InvalidCredentialsException,
-} from '../../domain/exceptions/AuthenticationExceptions.js';
 
 const router = Router();
 const authCommandService = new AuthCommandService();
 const authQueryService = new AuthQueryService();
 
-router.post('/register', async (req, res) => {
+router.post('/register', async (req, res, next) => {
   try {
     const dto: AuthUserDTO = req.body;
     const result = await authCommandService.register(dto);
     res.status(201).json(result);
   } catch (err) {
-    if (err instanceof EmailAlreadyUsedException) {
-      return res.status(409).json({ error: err.message });
-    }
-    return res.status(500).json({ error: 'Internal server error' });
+    next(err);
   }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', async (req, res, next) => {
   try {
     const dto: AuthUserDTO = req.body;
     const result = await authCommandService.login(dto);
     return res.status(200).json(result);
   } catch (err) {
-    if (err instanceof InvalidCredentialsException) {
-      return res.status(409).json({ error: err.message });
-    }
-
-    return res.status(500).json({ error: 'Internal server error' });
+    next(err);
   }
 });
 
-router.get('/authenticated', authMiddleware, async (req: AuthRequest, res) => {
-  await authQueryService.isAuthenticated(req.user!.id);
-  return res.status(200).json({
-    user: req.user,
-  });
-});
+router.get(
+  '/authenticated',
+  authMiddleware,
+  async (req: AuthRequest, res, next) => {
+    await authQueryService.isAuthenticated(req.user!.id);
+    try {
+      return res.status(200).json({
+        user: req.user,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+);
 
 router.put(
   '/update/password',
   authMiddleware,
-  async (req: AuthRequest, res) => {
+  async (req: AuthRequest, res, next) => {
     try {
       const dto: AuthUpdatePasswordDTO = req.body;
       const userId = req.user!.id;
       const result = await authCommandService.updatePassword(userId, dto);
       return res.status(201).json({ message: 'Password updated', result });
     } catch (err) {
-      return res.status(500).json({ error: 'Internal server error' });
+      next(err);
     }
   },
 );
 
-router.post('/forgot/password', async (req, res) => {
+router.post('/forgot/password', async (req, res, next) => {
   try {
     const dto: ResetPasswordRequestDTO = req.body;
     const result = await authCommandService.forgotPassword(dto);
     res.status(200).json(result);
   } catch (err) {
-    res.status(500).json({ error: 'Internal server error' });
+    next(err);
   }
 });
 
-router.get('/reset/password/validate/:token', async (req, res) => {
+router.get('/reset/password/validate/:token', async (req, res, next) => {
   const { token } = req.params;
-
+  
   try {
     await authQueryService.validateResetPasswordToken(token!);
     res.status(200).json({ valid: true });
   } catch (err) {
-    res.status(400).json({ error: 'Token invalid or expired' });
+    next(err);
   }
 });
 
-router.post('/reset/password/:token', async (req, res) => {
+router.post('/reset/password/:token', async (req, res, next) => {
   const { token } = req.params;
   const { newPassword } = req.body;
 
@@ -94,7 +91,7 @@ router.post('/reset/password/:token', async (req, res) => {
     await authCommandService.resetPassword(token, newPassword);
     res.status(200).json({ message: 'Password updated' });
   } catch (err) {
-    res.status(500).json({ error: 'Something went wrong' });
+    next(err);
   }
 });
 
